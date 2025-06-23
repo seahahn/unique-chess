@@ -1,0 +1,25 @@
+{
+  "name": "@unique-chess/webapp",
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_OPTIONS='--inspect=0.0.0.0:9229' vinxi dev --host --devtools",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "cucumber": "cross-env NODE_OPTIONS='--import tsx' cucumber-js",
+    "cucumber-debug": "cross-env NODE_OPTIONS='--import tsx' PWDEBUG=1 DEBUG=pw:api cucumber-js",
+    "clean": "rm -rf .turbo node_modules"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.15.0",
+    "@solidjs/start": "^1.1.0",
+    "solid-js": "^1.9.5",
+    "vinxi": "^0.5.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.7",
+    "tailwindcss": "^4.0.7"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

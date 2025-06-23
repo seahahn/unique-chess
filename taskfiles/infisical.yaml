@@ -1,0 +1,7 @@
+version: "3"
+
+tasks:
+  env:
+    - infisical export --format dotenv
+  create-dotenv:
+    - infisical export --format dotenv > .env

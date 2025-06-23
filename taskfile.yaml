@@ -1,0 +1,51 @@
+version: "3"
+
+includes:
+  infisical:
+    taskfile: ./taskfiles/infisical.yaml
+  docker:
+    taskfile: ./taskfiles/docker.yaml
+  webapp:
+    taskfile: ./workspaces/webapp
+    dir: ./workspaces/webapp
+  database:
+    taskfile: ./workspaces/database
+    dir: ./workspaces/database
+
+tasks:
+  # when you first want to spin up the project
+  setup:
+    - task: infisical:create-dotenv
+    - task: clean
+    - pnpm i
+    - task: database:generate-prisma
+  # build the prisma client. eventually we will get rid of this
+  generate-prisma:
+    - infisical run -- docker compose run --rm -it webapp pnpm run setup:db
+  # spin up the dev
+  dev:
+    dotenv: [".env"]
+    cmds:
+      - task: docker:up-daemon
+      - defer: task docker:down
+      - pnpm turbo dev --parallel
+  start:
+    dotenv: [".env"]
+    cmds:
+      - task: docker:up-daemon
+      - defer: task docker:down
+      - pnpm turbo start --parallel
+  clean:
+    - rm -rf node_modules
+    - task: webapp:clean
+    - pnpm clean -r
+  # cleanup and start from scratch
+  from-scratch:
+    - task: clean
+    - pnpm install --verbose # needed for local IDE.
+    - task: docker:down
+    - task: setup
+    - task: dev
+  reset:
+    - task: docker:down-and-cleanup
+    - task: clean

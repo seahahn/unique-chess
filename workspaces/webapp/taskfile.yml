@@ -1,0 +1,19 @@
+version: 3.0
+
+tasks:
+  build:
+    cmds:
+      - npm run build
+  clean-build:
+    cmd: rm -rf build
+  clean:
+    cmds:
+      - task: clean-build
+      - rm -rf node_modules
+  develop:
+    cmds:
+      - infisical run -- npm run develop
+  cucumber:
+    cmd: infisical run -- npm run cucumber {{ .CLI_ARGS }}
+  cucumber-debug:
+    cmd: infisical run -- npm run cucumber-debug {{ .CLI_ARGS }}

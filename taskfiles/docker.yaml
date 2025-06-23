@@ -1,0 +1,30 @@
+version: "3"
+
+tasks:
+  build:
+    # task docker:build
+    # task docker:build -- <service>
+    - infisical run -- docker compose build {{.CLI_ARGS}}
+  build-no-cache:
+    - infisical run -- docker compose build --no-cache {{.CLI_ARGS}}
+  watch:
+    - infisical run -- docker compose watch
+  up-daemon:
+    # task docker:up-daemon
+    # task docker:up-daemon -- <service>
+    - infisical run -- docker compose up -d {{.CLI_ARGS}}
+  logs-follow:
+    # task docker:logs-follow
+    # task docker:logs-follow -- <service>
+    - docker compose logs -f {{ .CLI_ARGS }}
+  recreate:
+    # task docker:recreate
+    # task docker:recreate -- <service>
+    - docker compose up -d --force-recreate {{.CLI_ARGS}}
+  down:
+    - infisical run -- docker compose down
+  down-and-cleanup:
+    - infisical run -- docker compose down -v
+  run-it:
+    # task docker:run-it -- <service> <command>
+    - infisical run -- docker compose run --rm -it {{.CLI_ARGS}}

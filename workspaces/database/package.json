@@ -1,0 +1,31 @@
+{
+  "name": "@unique-chess/database",
+  "version": "0.1.0",
+  "private": false,
+  "sideEffects": false,
+  "scripts": {
+    "generate": "prisma generate",
+    "db:prepare-migration": "prisma migrate dev --create-only --skip-seed",
+    "db:deploy-migration": "prisma migrate deploy",
+    "setup": "run-s setup:db",
+    "setup:db": "prisma generate && prisma migrate deploy",
+    "clean": "rm -rf .turbo node_modules"
+  },
+  "dependencies": {
+    "@prisma/client": "6.8.2"
+  },
+  "exports": {
+    ".": "./index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.1",
+    "prisma": "6.8.2",
+    "rss-parser": "^3.13.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "prisma": {
+    "schema": "schema.prisma",
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} seed/seed.ts"
+  }
+}

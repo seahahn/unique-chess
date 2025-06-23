@@ -1,0 +1,28 @@
+version: 3.0
+
+tasks:
+  prepare-migration:
+    cmds:
+      - ENVIRONMENT=local ./bin/webapp/prepare-migration.sh
+  pull:
+    cmds:
+      - infisical run -- pnpm prisma db pull
+  deploy-migration:
+    cmds:
+      - ENVIRONMENT=local ./bin/webapp/deploy-migration.sh
+  seed:
+    cmds:
+      - pnpm prisma db seed
+  generate:
+    cmds:
+      - task: generate-prisma
+  generate-prisma:
+    cmds:
+      - pnpm prisma generate
+  # Run like this task database:fix-migration -- --rolled-back "name of migration"
+  fix-migration:
+    cmds:
+      - infisical run -- pnpm prisma migrate resolve {{.CLI_ARGS}}
+  setup:
+    cmds:
+      - pnpm run setup:db
