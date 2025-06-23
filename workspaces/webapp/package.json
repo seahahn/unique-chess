@@ -2,7 +2,7 @@
   "name": "@unique-chess/webapp",
   "type": "module",
   "scripts": {
-    "dev": "infisical run -- NODE_OPTIONS='--inspect=0.0.0.0:9229' vinxi dev --host --devtools",
+    "dev": "infisical run -- vinxi dev --host --devtools",
     "build": "infisical run -- vinxi build",
     "start": "infisical run -- vinxi start",
     "cucumber": "cross-env NODE_OPTIONS='--import tsx' cucumber-js",

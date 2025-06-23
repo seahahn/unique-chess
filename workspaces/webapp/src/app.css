@@ -1,12 +1,12 @@
 @import "tailwindcss";
-@import "daisyui";
+@plugin "daisyui";
 
 @theme {
   --font-display: "Satoshi", "sans-serif";
   --color-brand: #123456;
 }
 
-@utility .btn-brand {
+.btn-brand {
   background-color: var(--color-brand);
   color: white;
   border-radius: 0.5rem;
