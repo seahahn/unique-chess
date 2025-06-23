@@ -1,4 +1,17 @@
 @import "tailwindcss";
+@import "daisyui";
+
+@theme {
+  --font-display: "Satoshi", "sans-serif";
+  --color-brand: #123456;
+}
+
+@utility .btn-brand {
+  background-color: var(--color-brand);
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}
 
 :root {
   --background-rgb: 214, 219, 220;
