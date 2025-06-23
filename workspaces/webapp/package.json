@@ -13,11 +13,17 @@
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "^1.1.0",
     "solid-js": "^1.9.5",
+    "@tailwindcss/vite": "^4.0.7",
+    "tailwindcss": "^4.0.7",
     "vinxi": "^0.5.7"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.0.7",
-    "tailwindcss": "^4.0.7"
+    "@cucumber/cucumber": "11.3.0",
+    "@cucumber/pretty-formatter": "1.0.1",
+    "@playwright/test": "^1.52.0",
+    "@types/fs-extra": "^11.0.4",
+    "cucumber-console-formatter": "^1.0.0",
+    "fs-extra": "^11.3.0"
   },
   "engines": {
     "node": ">=20"
