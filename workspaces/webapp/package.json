@@ -29,6 +29,7 @@
     "daisyui": "^5.0.43",
     "fs-extra": "^11.3.0",
     "postcss": "^8.5.6",
+    "solid-devtools": "0.34.0",
     "tailwindcss": "^4.1.10"
   },
   "engines": {
