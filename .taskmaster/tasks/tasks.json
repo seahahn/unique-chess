@@ -1,0 +1,1190 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Monorepo Setup with Turborepo",
+        "description": "Initialize the monorepo structure using Turborepo to manage workspaces for the webapp, database, and WebSocket server.",
+        "details": "mkdir unique-chess-platform\ncd unique-chess-platform\nnpx create-turbo@latest .\n# Configure turbo.json for workspaces: apps/webapp, apps/websocket-server, packages/database\n# Initialize git repository",
+        "testStrategy": "Verify Turborepo commands (build, dev) work across defined workspaces. Check that package manager installs dependencies correctly within the monorepo structure.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Initialize `workspaces/webapp` (SolidStart) and `workspaces/database` (Prisma)",
+        "description": "Scaffold the SolidStart application in `workspaces/webapp` for frontend and tRPC backend, and set up the `workspaces/database` package for Prisma.",
+        "details": "# In workspaces/webapp (or apps/webapp)\npnpm dlx degit solidjs/templates/start workspaces/webapp\n# Configure SolidStart for SSR, tRPC integration. Install Tailwind CSS, DaisyUI.\n\n# In workspaces/database (or packages/database)\nmkdir -p workspaces/database\ncd workspaces/database\npnpm init\npnpm add prisma typescript ts-node @types/node --save-dev\npnpm prisma init --datasource-provider postgresql\n# Configure package.json for exporting Prisma client",
+        "testStrategy": "`workspaces/webapp` successfully runs a basic SolidStart page. `workspaces/database` can initialize Prisma and generate a basic client.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scaffold SolidStart webapp",
+            "description": "Use degit to clone the SolidStart template into the workspaces/webapp directory.",
+            "dependencies": [],
+            "details": "Run `pnpm dlx degit solidjs/templates/start workspaces/webapp` from the project root.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Configure SolidStart for SSR and tRPC",
+            "description": "Modify SolidStart configuration files to enable Server-Side Rendering (SSR) and prepare for tRPC integration.",
+            "dependencies": [
+              1
+            ],
+            "details": "Edit `workspaces/webapp/vite.config.ts` and potentially other configuration files to ensure SSR is enabled and set up initial structure or dependencies for tRPC integration.",
+            "status": "in-progress",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Install frontend styling dependencies",
+            "description": "Add Tailwind CSS and DaisyUI to the SolidStart webapp project and configure them.",
+            "dependencies": [
+              1
+            ],
+            "details": "Navigate to `workspaces/webapp`. Run `pnpm add -D tailwindcss postcss autoprefixer daisyui`. Initialize Tailwind CSS: `pnpm tailwindcss init -p`. Update `tailwind.config.js` and the main CSS file (`src/index.css` or similar) to include Tailwind directives and configure content paths and DaisyUI plugin.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Initialize database package directory",
+            "description": "Create the `workspaces/database` directory and initialize a new pnpm package within it.",
+            "dependencies": [],
+            "details": "Run `mkdir -p workspaces/database` from the project root. Then navigate into the directory: `cd workspaces/database`. Initialize pnpm: `pnpm init -y`.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Install Prisma and initialize for PostgreSQL",
+            "description": "Add Prisma, TypeScript, and related dependencies to the database package and initialize Prisma with the PostgreSQL provider.",
+            "dependencies": [
+              4
+            ],
+            "details": "Navigate to `workspaces/database`. Run `pnpm add -D prisma typescript ts-node @types/node`. Then run `pnpm prisma init --datasource-provider postgresql`.",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Configure Environment Variables and Secrets Management (infisical)",
+        "description": "Set up infisical for managing environment variables and secrets across all services (local, staging, production).",
+        "details": "# Sign up for infisical.\n# Create a project in infisical for \"3D Chess Web Platform\".\n# Define environments (dev, staging, prod).\n# Add initial secrets: DATABASE_URL, JWT_SECRET, STRIPE_SECRET_KEY, GOOGLE_CLIENT_ID, MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, SENTRY_DSN.\n# Integrate infisical CLI or SDK into the startup scripts of services (webapp, websocket-server) to load secrets.\n# Example: infisical run -- pnpm dev",
+        "testStrategy": "Services can successfully load secrets from infisical in a local development environment. Sensitive keys are not hardcoded.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Sign up for Infisical and Create Project",
+            "description": "Complete the Infisical signup process and create a new project specifically for the '3D Chess Web Platform'.",
+            "dependencies": [],
+            "details": "Go to infisical.com, sign up for an account, and create a new project named '3D Chess Web Platform'.",
+            "status": "done",
+            "testStrategy": "Verify that a project named '3D Chess Web Platform' exists in your Infisical dashboard."
+          },
+          {
+            "id": 2,
+            "title": "Define Environments in Infisical Project",
+            "description": "Define the required environments (dev, staging, prod) within the '3D Chess Web Platform' project in Infisical.",
+            "dependencies": [
+              1
+            ],
+            "details": "Navigate to the project settings in Infisical and add the 'dev', 'staging', and 'prod' environments.",
+            "status": "done",
+            "testStrategy": "Verify that 'dev', 'staging', and 'prod' environments are listed under the 'Environments' section for the project in the Infisical dashboard."
+          },
+          {
+            "id": 3,
+            "title": "Add Initial Secrets to Environments",
+            "description": "Add the specified initial set of secrets (DATABASE_URL, JWT_SECRET, etc.) to the defined environments ('dev', 'staging', 'prod') in Infisical.",
+            "dependencies": [
+              2
+            ],
+            "details": "For each environment ('dev', 'staging', 'prod'), add the following secrets: DATABASE_URL, JWT_SECRET, STRIPE_SECRET_KEY, GOOGLE_CLIENT_ID, MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, SENTRY_DSN. Use placeholder values if actual secrets are not yet available.",
+            "status": "done",
+            "testStrategy": "Verify that the specified secrets exist within each of the 'dev', 'staging', and 'prod' environments in the Infisical dashboard."
+          },
+          {
+            "id": 4,
+            "title": "Install Infisical CLI",
+            "description": "Install the Infisical Command Line Interface (CLI) on relevant development machines and deployment environments (e.g., CI/CD runners, servers).",
+            "dependencies": [],
+            "details": "Follow the official Infisical documentation to install the CLI for your operating system(s).",
+            "status": "done",
+            "testStrategy": "Open a terminal and run `infisical --version` to confirm successful installation and check the version."
+          },
+          {
+            "id": 5,
+            "title": "Integrate Infisical into Service Startup Scripts",
+            "description": "Modify the startup scripts or entry points for the 'webapp' and 'websocket-server' services to load secrets using the Infisical CLI or SDK.",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "Update the package.json scripts or Docker entrypoints for 'webapp' and 'websocket-server'. Use the `infisical run -- <your_command>` pattern (e.g., `infisical run -- pnpm dev`) or integrate the Infisical SDK directly into the application code. Configure authentication (e.g., using service tokens or personal access tokens).",
+            "status": "pending",
+            "testStrategy": "Run the 'webapp' and 'websocket-server' services locally using the modified startup commands and verify that environment variables loaded from Infisical are accessible within the running application processes."
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Initialize Supabase Project and Configure Prisma in `workspaces/database`",
+        "description": "Set up a Supabase project (PostgreSQL database) and configure Prisma in `workspaces/database` to connect to it. Define initial schema migrations.",
+        "details": "# Create a new project on Supabase.\n# Obtain the PostgreSQL connection string.\n# Update .env in workspaces/database (managed by infisical) with SUPABASE_DATABASE_URL.\n# Configure prisma/schema.prisma with the PostgreSQL provider and connection URL.\n# Example schema.prisma:\n# generator client {\n#   provider = \"prisma-client-js\"\n#   output   = \"./generated/client\"\n# }\n# datasource db {\n#   provider = \"postgresql\"\n#   url      = env(\"DATABASE_URL\")\n# }\n# Create initial migration for core tables (e.g., User placeholder).\n# pnpm --filter database exec prisma migrate dev --name init_setup\n# Ensure Prisma client can be generated and exported from this package.",
+        "testStrategy": "Prisma can connect to the Supabase database. `prisma migrate dev` runs successfully. Prisma client is generated and can be imported by other packages.",
+        "priority": "high",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Initialize MinIO Instance (Local Setup)",
+        "description": "Set up a local MinIO instance using Docker for object storage during development.",
+        "details": "# Add MinIO service to docker-compose.yml.\n# version: '3.8'\n# services:\n#   minio:\n#     image: minio/minio\n#     ports:\n#       - \"9000:9000\" # API\n#       - \"9001:9001\" # Console\n#     volumes:\n#       - minio_data:/data\n#     environment:\n#       MINIO_ROOT_USER: minioadmin\n#       MINIO_ROOT_PASSWORD: minioadmin\n#     command: server /data --console-address \":9001\"\n# volumes:\n#   minio_data:\n#\n# Store MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY in infisical.\n# Create an initial bucket (e.g., \"chess-assets\").",
+        "testStrategy": "MinIO container runs successfully. Able to access MinIO console and create buckets. Application can connect to MinIO using SDK with credentials from infisical.",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Add MinIO service to docker-compose.yml",
+            "description": "Incorporate the provided MinIO service definition into the project's docker-compose.yml file.",
+            "dependencies": [],
+            "details": "Copy the MinIO service block, volumes definition, and ensure correct indentation within the existing docker-compose.yml file. Use the provided snippet as a template.",
+            "status": "pending",
+            "testStrategy": "Verify the docker-compose.yml file contains the new 'minio' service definition and is syntactically valid (e.g., `docker-compose config`)."
+          },
+          {
+            "id": 2,
+            "title": "Start Docker containers",
+            "description": "Bring up the Docker containers defined in docker-compose.yml, including the new MinIO service.",
+            "dependencies": [
+              1
+            ],
+            "details": "Execute the `docker-compose up -d` command from the project root directory.",
+            "status": "pending",
+            "testStrategy": "Check running containers using `docker ps` and confirm the 'minio' container is listed and healthy."
+          },
+          {
+            "id": 3,
+            "title": "Verify MinIO console accessibility",
+            "description": "Ensure the MinIO web console is reachable via the configured port.",
+            "dependencies": [
+              2
+            ],
+            "details": "Open a web browser and navigate to `http://localhost:9001`. Log in using the default credentials (minioadmin/minioadmin) specified in the docker-compose file.",
+            "status": "pending",
+            "testStrategy": "Successfully load the MinIO console login page and log in."
+          },
+          {
+            "id": 4,
+            "title": "Store MinIO credentials in Infisical",
+            "description": "Add the MinIO root user, password, and endpoint to the project's secrets in Infisical.",
+            "dependencies": [
+              2
+            ],
+            "details": "In Infisical, add secrets for `MINIO_ENDPOINT` (e.g., `http://localhost:9000`), `MINIO_ACCESS_KEY` (minioadmin), and `MINIO_SECRET_KEY` (minioadmin) using the values from the docker-compose file.",
+            "status": "pending",
+            "testStrategy": "Verify the secrets are added correctly in the Infisical dashboard for the appropriate environment."
+          },
+          {
+            "id": 5,
+            "title": "Create initial 'chess-assets' bucket",
+            "description": "Create the required initial bucket within the running MinIO instance.",
+            "dependencies": [
+              2,
+              4
+            ],
+            "details": "Use the MinIO web console (accessible via http://localhost:9001) or the `mc` client tool with the credentials stored in Infisical to create a new bucket named \"chess-assets\".",
+            "status": "pending",
+            "testStrategy": "Verify the \"chess-assets\" bucket appears in the list of buckets in the MinIO console or via the `mc ls` command."
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Basic Docker and docker-compose Setup for Local Development",
+        "description": "Create Dockerfiles for `workspaces/webapp` and the WebSocket server, and a `docker-compose.yml` file to orchestrate local development services.",
+        "details": "# Dockerfile for workspaces/webapp (SolidStart with tRPC):\n# FROM node:18-alpine\n# WORKDIR /app\n# COPY package.json pnpm-lock.yaml ./\n# RUN pnpm install --frozen-lockfile\n# COPY . .\n# RUN pnpm --filter webapp build\n# CMD [\"pnpm\", \"--filter\", \"webapp\", \"start\"]\n\n# Dockerfile for WebSocket server (Node.js): Similar structure.\n\n# docker-compose.yml: Include services for webapp, websocket_server, minio, and potentially a local Supabase/Postgres instance.",
+        "testStrategy": "`docker-compose up` successfully starts all defined services. Webapp is accessible. Hot reloading works for local development.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Initial CI/CD Pipeline Setup (GitHub Actions)",
+        "description": "Configure a basic CI/CD pipeline using GitHub Actions for linting, testing, building Docker images, and deploying to a staging environment.",
+        "details": "# .github/workflows/ci.yml\n# name: CI\n# on: [push, pull_request]\n# jobs:\n#   lint_test_build:\n#     runs-on: ubuntu-latest\n#     steps:\n#       - uses: actions/checkout@v3\n#       - uses: pnpm/action-setup@v2\n#       - run: pnpm install --frozen-lockfile\n#       - run: pnpm lint\n#       - run: pnpm test\n#       - run: # Docker build and push commands for webapp and websocket-server\n#   deploy_staging: # Optional initial setup\n#     # ... steps to deploy to Netlify/Fly.io",
+        "testStrategy": "CI pipeline triggers on push/PR. Linting and placeholder tests pass. Docker images are built successfully.",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create initial workflow file structure",
+            "description": "Set up the basic structure for the CI/CD workflow file (`.github/workflows/ci.yml`) including name, trigger events, and the initial job definition.",
+            "dependencies": [],
+            "details": "Create the file `.github/workflows/ci.yml` with `name: CI`, `on: [push, pull_request]`, and the `jobs` section containing a `lint_test_build` job running on `runs-on: ubuntu-latest`.",
+            "status": "pending",
+            "testStrategy": "Verify the file exists in the repository and contains the basic YAML structure for a GitHub Actions workflow."
+          },
+          {
+            "id": 2,
+            "title": "Add checkout and environment setup steps",
+            "description": "Include steps in the `lint_test_build` job to checkout the code from the repository and set up the pnpm environment for dependency management.",
+            "dependencies": [
+              1
+            ],
+            "details": "Add the following steps under the `lint_test_build` job's `steps`: `- uses: actions/checkout@v3`, `- uses: pnpm/action-setup@v2`, and `- run: pnpm install --frozen-lockfile`.",
+            "status": "pending",
+            "testStrategy": "Trigger the workflow and observe the GitHub Actions run log to ensure the checkout and pnpm setup steps execute successfully without errors."
+          },
+          {
+            "id": 3,
+            "title": "Add linting and testing steps",
+            "description": "Add steps to the `lint_test_build` job to execute code linting and unit/integration tests using defined pnpm scripts.",
+            "dependencies": [
+              2
+            ],
+            "details": "Add the following steps under the `lint_test_build` job's `steps` after the install step: `- run: pnpm lint` and `- run: pnpm test`.",
+            "status": "pending",
+            "testStrategy": "Trigger the workflow and verify that the 'pnpm lint' and 'pnpm test' steps run and pass successfully in the GitHub Actions log."
+          },
+          {
+            "id": 4,
+            "title": "Add Docker build steps",
+            "description": "Add steps to the `lint_test_build` job to build Docker images for the specified services (webapp and websocket-server).",
+            "dependencies": [
+              3
+            ],
+            "details": "Add `run` steps to execute `docker build` commands for both the webapp and websocket-server services. This may involve navigating to service directories and tagging the images appropriately.",
+            "status": "pending",
+            "testStrategy": "Trigger the workflow and confirm that the Docker build commands execute successfully for both services within the GitHub Actions run."
+          },
+          {
+            "id": 5,
+            "title": "Add staging deployment job placeholder",
+            "description": "Add a separate job or placeholder steps for deploying the built artifacts or Docker images to a staging environment.",
+            "dependencies": [
+              4
+            ],
+            "details": "Add a new job named `deploy_staging` at the same level as `lint_test_build`. Define its basic structure, potentially including a dependency on the build job (`needs: lint_test_build`) and placeholder steps or comments indicating where deployment logic will go (e.g., steps for Netlify/Fly.io deployment).",
+            "status": "pending",
+            "testStrategy": "Verify that the `deploy_staging` job is defined in the `.github/workflows/ci.yml` file, even if its internal steps are minimal or commented out initially."
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Define Core Database Schemas in `workspaces/database` via Prisma",
+        "description": "Define Prisma schemas for User, Game, Chat, Payment, and Asset models in `workspaces/database` as specified in the PRD. Generate initial migrations.",
+        "details": "// workspaces/database/prisma/schema.prisma\nmodel User {\n  id            String    @id @default(cuid())\n  email         String    @unique\n  passwordHash  String?\n  googleId      String?   @unique\n  name          String?\n  avatarUrl     String?\n  bio           String?\n  rating        Int       @default(1200)\n  createdAt     DateTime  @default(now())\n  updatedAt     DateTime  @updatedAt\n  settings      Json?     // notifications, privacy, skins\n  membershipTier String   @default(\"free\") // free, premium\n  stripeCustomerId String? @unique\n  payments      Payment[]\n  ownedAssets   Asset[]   @relation(\"OwnedAssets\")\n}\n\nmodel Game { /* ... */ }\nmodel Chat { /* ... */ }\nmodel Payment { /* ... */ }\nmodel Asset { /* ... */ }\n\nRun `pnpm --filter database exec prisma migrate dev --name initial_schemas`.\nExport Prisma client from `workspaces/database`.",
+        "testStrategy": "Prisma migrations apply successfully. Prisma client is generated and can be imported into `workspaces/webapp`. Basic CRUD operations can be performed on these tables via Prisma Client.",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Game Schema",
+            "description": "Add the Prisma schema definition for the Game model in `workspaces/database/prisma/schema.prisma`.",
+            "dependencies": [],
+            "details": "Define the `Game` model in `workspaces/database/prisma/schema.prisma`, including fields and relations as specified in the PRD (e.g., title, status, players, winner, moves, createdAt, updatedAt).",
+            "status": "pending",
+            "testStrategy": "Verify the `Game` model is correctly defined in `schema.prisma`."
+          },
+          {
+            "id": 2,
+            "title": "Define Chat Schema",
+            "description": "Add the Prisma schema definition for the Chat model in `workspaces/database/prisma/schema.prisma`.",
+            "dependencies": [],
+            "details": "Define the `Chat` model in `workspaces/database/prisma/schema.prisma`, including fields and relations as specified in the PRD (e.g., gameId, messages, participants, createdAt, updatedAt).",
+            "status": "pending",
+            "testStrategy": "Verify the `Chat` model is correctly defined in `schema.prisma`."
+          },
+          {
+            "id": 3,
+            "title": "Define Payment Schema",
+            "description": "Add the Prisma schema definition for the Payment model in `workspaces/database/prisma/schema.prisma`.",
+            "dependencies": [],
+            "details": "Define the `Payment` model in `workspaces/database/prisma/schema.prisma`, including fields and relations as specified in the PRD (e.g., userId, amount, currency, status, stripePaymentId, createdAt). Ensure the relation to the User model is correctly defined.",
+            "status": "pending",
+            "testStrategy": "Verify the `Payment` model is correctly defined in `schema.prisma` with the relation to User."
+          },
+          {
+            "id": 4,
+            "title": "Define Asset Schema",
+            "description": "Add the Prisma schema definition for the Asset model in `workspaces/database/prisma/schema.prisma`.",
+            "dependencies": [],
+            "details": "Define the `Asset` model in `workspaces/database/prisma/schema.prisma`, including fields and relations as specified in the PRD (e.g., name, type, price, ownerId, createdAt). Ensure the relation to the User model is correctly defined.",
+            "status": "pending",
+            "testStrategy": "Verify the `Asset` model is correctly defined in `schema.prisma` with the relation to User."
+          },
+          {
+            "id": 5,
+            "title": "Generate Initial Migration and Export Client",
+            "description": "Generate the initial database migration based on the defined schemas and export the Prisma client.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "details": "Run the command `pnpm --filter database exec prisma migrate dev --name initial_schemas` from the project root. Then, ensure the Prisma client is exported from `workspaces/database` for use by other workspaces.",
+            "status": "pending",
+            "testStrategy": "Verify a new migration file is created in `workspaces/database/prisma/migrations` and the Prisma client is exported from the database workspace."
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Implement User Authentication (Better Auth, JWT) in `workspaces/webapp`",
+        "description": "Integrate Better Auth for user registration (email/password, Google OAuth2) and login within `workspaces/webapp`. Implement JWT-based session management.",
+        "details": "// In workspaces/webapp (tRPC router for auth)\n// Use Better Auth library for SolidStart.\n// Auth endpoints: /api/auth/register, /api/auth/login, /api/auth/google, /api/auth/logout, /api/auth/session\n// Registration: Hash password, store user in DB via Prisma. Send verification email.\n// Login: Verify credentials, generate JWT.\n// Google OAuth2: Handle callback, create/link user, generate JWT.\n// JWT: Include userId. Store in secure HTTPOnly cookie.\n// Middleware for tRPC to protect routes based on JWT.\n// Implement password reset and email verification flows.",
+        "testStrategy": "Users can register with email/password and Google. Users can log in. JWT is issued and validated. Protected routes are inaccessible without valid JWT. Email verification and password reset initiated.",
+        "priority": "high",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Setup tRPC Routers and Basic API Endpoints in `workspaces/webapp`",
+        "description": "Initialize tRPC in the SolidStart application (`workspaces/webapp`). Create initial tRPC routers for user and game domains. Implement basic procedures with Zod validation.",
+        "details": "// workspaces/webapp/src/server/trpc/router.ts\nimport { initTRPC } from '@trpc/server';\nimport { ZodError } from 'zod';\nimport { prisma } from '@unique-chess/database'; // Import Prisma client\n// Define createContext to include prisma and user session.\nexport const t = initTRPC.context<Context>().create({ /* ... errorFormatter ... */ });\n\n// workspaces/webapp/src/server/trpc/routers/user.ts (example)\n// const userRouter = t.router({ getProfile: t.procedure.use(isAuthed).query(...) });\n\n// workspaces/webapp/src/server/trpc/routers/_app.ts\n// export const appRouter = t.router({ user: userRouter, game: gameRouter });\n// export type AppRouter = typeof appRouter;\n\n// Integrate tRPC with SolidStart API routes.",
+        "testStrategy": "tRPC client can be created in the frontend. Basic tRPC procedure (e.g., fetching user profile) can be called and returns expected data. Zod validation works.",
+        "priority": "high",
+        "dependencies": [
+          2,
+          4,
+          8
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Initialize tRPC Core and Context",
+            "description": "Set up the core tRPC instance in `src/server/trpc/router.ts`, define the context type including Prisma and session/user, and configure basic error formatting.",
+            "dependencies": [],
+            "details": "Modify `src/server/trpc/router.ts`. Import `initTRPC`, `ZodError`, `prisma`. Define the `Context` type to include `prisma` and potentially user session data. Call `initTRPC.context<Context>().create({...})`. Configure the `errorFormatter` to handle Zod errors gracefully.",
+            "status": "pending",
+            "testStrategy": "Verify that the `t` instance is successfully created and exported. Ensure the `Context` type is correctly defined. Check the error formatter configuration."
+          },
+          {
+            "id": 2,
+            "title": "Create User Router with Basic Procedure",
+            "description": "Create the `src/server/trpc/routers/user.ts` file, define the `userRouter`, and add a simple procedure (e.g., `getProfile`) with basic Zod validation for output and potentially authentication middleware.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create `src/server/trpc/routers/user.ts`. Import `t` from `../router`. Define `userRouter` using `t.router`. Add a `getProfile` procedure using `t.procedure`. Use Zod (`z.object`) for output validation. If authentication middleware (`isAuthed`) is available, apply it using `.use(isAuthed)`.",
+            "status": "pending",
+            "testStrategy": "Manually test the `getProfile` procedure via a tRPC client call (once integration is complete) to verify it returns data matching the Zod schema and respects authentication."
+          },
+          {
+            "id": 3,
+            "title": "Create Game Router with Basic Procedure",
+            "description": "Create the `src/server/trpc/routers/game.ts` file, define the `gameRouter`, and add a simple procedure (e.g., `listGames` or `getGameDetails`) with basic Zod validation for input and/or output.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create `src/server/trpc/routers/game.ts`. Import `t` from `../router`. Define `gameRouter` using `t.router`. Add a procedure like `listGames` or `getGameDetails`. Use Zod for input validation (e.g., `z.string()` for an ID) and/or output validation (e.g., `z.array(z.object({...}))`).",
+            "status": "pending",
+            "testStrategy": "Manually test the game procedure via a tRPC client call (once integration is complete) to verify input validation works and output matches the Zod schema."
+          },
+          {
+            "id": 4,
+            "title": "Combine Routers in `_app.ts`",
+            "description": "Create the `src/server/trpc/routers/_app.ts` file, import the individual `userRouter` and `gameRouter`, combine them into the main `appRouter`, and export `appRouter` and its type `AppRouter`.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Create `src/server/trpc/routers/_app.ts`. Import `userRouter` from `./user`. Import `gameRouter` from `./game`. Import `t` from `../router`. Define `appRouter` using `t.router({ user: userRouter, game: gameRouter })`. Export `appRouter` and `type AppRouter = typeof appRouter;`.",
+            "status": "pending",
+            "testStrategy": "Verify that `appRouter` is correctly exported and includes the `user` and `game` sub-routers. Check that the `AppRouter` type is correctly inferred and exported."
+          },
+          {
+            "id": 5,
+            "title": "Integrate tRPC with SolidStart API Route",
+            "description": "Create the SolidStart API route file (`src/routes/api/trpc/[...trpc].ts`) to handle incoming tRPC requests by importing the `appRouter` and `createContext` and using the appropriate tRPC adapter or SolidStart's API route handling.",
+            "dependencies": [
+              1,
+              4
+            ],
+            "details": "Create `src/routes/api/trpc/[...trpc].ts`. Import `appRouter` from `../../server/trpc/routers/_app`. Import the context creation function (e.g., `createContext`) from `../../server/trpc/router`. Use a tRPC adapter (like `@trpc/server/adapters/node` or a SolidStart-specific one if available) to set up the request handler, passing `appRouter` and `createContext`.",
+            "status": "pending",
+            "testStrategy": "Start the SolidStart development server. Use a tRPC client in the frontend or a tool like `curl` or Postman to send a request to a tRPC endpoint (e.g., `/api/trpc/user.getProfile`) and verify that the request is processed correctly and a valid response is received."
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "Develop WebSocket Server (Separate App with JWT Auth)",
+        "description": "Create a dedicated WebSocket server (e.g., using Node.js with `ws`) as a separate app for real-time communication, including JWT authentication for connections.",
+        "details": "# Create a new app: workspaces/websocket-server\n# pnpm init, add dependencies like ws, typescript, jsonwebtoken.\n# Basic WebSocket server structure:\n# import { WebSocketServer } from 'ws';\n# const wss = new WebSocketServer({ port: 8080 });\n# wss.on('connection', (ws, req) => {\n#   // Authenticate connection using JWT from req.url or initial message\n#   ws.on('message', (message) => { /* ... */ });\n#   ws.send('connected');\n# });\n# Define message types/protocol for game state, chat, presence.",
+        "testStrategy": "WebSocket server starts. A simple WebSocket client can connect, authenticate with JWT, send, and receive messages.",
+        "priority": "high",
+        "dependencies": [
+          1,
+          3,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Implement Real-time Game State Synchronization",
+        "description": "Implement logic for synchronizing game state (moves, board updates, timers) in real-time between players and spectators using WebSockets and tRPC for persistence.",
+        "details": "// WebSocket Server:\n// - Handle 'joinGame', 'makeMove', 'resignGame' events.\n// - Validate moves (can use a chess library like chess.js).\n// - Call tRPC endpoint on webapp to update game state in database.\n// - Broadcast game state updates to all clients in the game room.\n\n// SolidStart Webapp (Client-side):\n// - Establish WebSocket connection, authenticate.\n// - Send game actions to WebSocket server.\n// - Receive game state updates and re-render UI (Three.js board, timers).",
+        "testStrategy": "Player A makes a move, Player B's board updates in real-time. Spectators see updates. Game state is persisted in DB. Timers synchronize.",
+        "priority": "high",
+        "dependencies": [
+          8,
+          10,
+          11
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Setup WebSocket Server and Basic Connection Handling",
+            "description": "Initialize the WebSocket server, configure it to listen for connections, and implement basic connection/disconnection handling. Include initial logic for clients joining a specific game room.",
+            "dependencies": [],
+            "details": "Set up the WebSocket server instance. Implement event listeners for 'connection' and 'close'. Add logic to map connections to game rooms based on initial 'joinGame' messages or similar mechanisms. Ensure the server is running and accessible.",
+            "status": "pending",
+            "testStrategy": "Manually connect multiple clients (e.g., using a WebSocket client tool or browser console) and verify that the server registers connections and disconnections correctly. Test joining different 'rooms'."
+          },
+          {
+            "id": 2,
+            "title": "Implement Client-side WebSocket Connection and Authentication",
+            "description": "Develop the SolidStart client-side logic to establish a WebSocket connection to the server and handle initial authentication.",
+            "dependencies": [
+              1
+            ],
+            "details": "Use the WebSocket API or a library in the SolidStart application. Implement logic to connect to the server URL. Include sending authentication credentials (e.g., a token) immediately after connection is established. Handle connection errors and successful connection states.",
+            "status": "pending",
+            "testStrategy": "Run the SolidStart application and verify in the browser's network tab that a WebSocket connection is successfully established and that authentication data is sent. Check server logs to confirm successful authentication."
+          },
+          {
+            "id": 3,
+            "title": "Implement Server-side Game Action Handling and Validation",
+            "description": "Develop the server-side logic to receive and process specific game action events from clients ('makeMove', 'resignGame'). Integrate a chess library (like chess.js) for move validation.",
+            "dependencies": [
+              1
+            ],
+            "details": "Add event listeners on the WebSocket connection for 'makeMove' and 'resignGame' events. Parse incoming message data. For 'makeMove', use chess.js to validate the proposed move against the current game state. Handle invalid moves (e.g., send an error back to the client).",
+            "status": "pending",
+            "testStrategy": "Use the client application or a WebSocket tool to send 'makeMove' and 'resignGame' messages to the server. Verify server logs show the events are received and processed. Test sending valid and invalid moves and confirm validation logic works correctly."
+          },
+          {
+            "id": 4,
+            "title": "Integrate Server-side Persistence via tRPC",
+            "description": "Modify the server-side game action handling to call the appropriate tRPC endpoint to persist game state changes in the database after a valid action.",
+            "dependencies": [
+              3
+            ],
+            "details": "After a move is validated or a resignation is processed, call the relevant tRPC mutation (defined in the webapp's backend) to update the game state, move history, or game status in the database. Handle potential errors from the tRPC call.",
+            "status": "pending",
+            "testStrategy": "Perform valid game actions ('makeMove', 'resignGame') from the client. Verify that the server successfully calls the tRPC endpoint and that the database is updated correctly with the new game state."
+          },
+          {
+            "id": 5,
+            "title": "Implement Server-side State Broadcasting and Client-side Reception/Rendering",
+            "description": "Implement the server logic to broadcast updated game state to all clients in the relevant game room after a state change. Develop the client-side logic to receive these updates and trigger UI re-rendering.",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "On the server, after a valid action is processed and persisted, retrieve the updated game state and broadcast it to all WebSocket connections belonging to that game room. On the client, add an event listener for incoming game state updates from the WebSocket. Parse the received data and update the application's state (e.g., Solid signals) to trigger re-rendering of the Three.js board, timers, etc.",
+            "status": "pending",
+            "testStrategy": "Connect multiple clients to the same game. Perform an action (e.g., make a move) from one client. Verify that all other connected clients in the same game room receive the state update and that their UI (board, timers) updates correctly in real-time."
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "title": "Implement Real-time Chat Logic (In-Game)",
+        "description": "Develop real-time chat functionality (in-game) using WebSockets. Store chat messages in the database via tRPC.",
+        "details": "// WebSocket Server:\n// - Handle 'joinChatRoom', 'sendChatMessage' events.\n// - Broadcast messages to relevant clients in a chat room.\n\n// SolidStart Webapp (Client-side):\n// - UI for sending and displaying chat messages.\n// - Send messages via WebSocket.\n// - Receive new messages and update chat UI.\n// tRPC endpoints for persisting chat messages and fetching chat history.",
+        "testStrategy": "Users in the same game can send and receive chat messages in real-time. Messages are persisted and history can be loaded.",
+        "priority": "medium",
+        "dependencies": [
+          8,
+          10,
+          11
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Chat Message Database Schema",
+            "description": "Create the necessary database table and schema definition for storing chat messages, including fields like sender ID, room ID, message content, and timestamp.",
+            "dependencies": [],
+            "details": "Use the project's ORM (e.g., Prisma) to define a `ChatMessage` model. Include fields for `id`, `roomId` (linking to a chat room or game session), `senderId` (linking to a user or player), `content` (text), and `timestamp` (creation time). Generate and apply the database migration.",
+            "status": "pending",
+            "testStrategy": "Verify the database migration runs successfully and the new `chat_messages` table (or similar name) exists with the defined columns and appropriate data types."
+          },
+          {
+            "id": 2,
+            "title": "Implement tRPC Procedure for Saving Messages",
+            "description": "Create a server-side tRPC procedure that accepts chat message data from the WebSocket handler and saves it to the database using the defined schema.",
+            "dependencies": [
+              1
+            ],
+            "details": "Define a tRPC mutation procedure, e.g., `saveChatMessage`, within the server-side tRPC router. This procedure should take input validation for message data (roomId, senderId, content) and use the ORM to insert a new record into the `ChatMessage` table.",
+            "status": "pending",
+            "testStrategy": "Write an integration test or use a tool to call the `saveChatMessage` tRPC procedure directly with valid data and verify that a new row is successfully inserted into the `chat_messages` table in the database."
+          },
+          {
+            "id": 3,
+            "title": "Implement WebSocket Server Message Processing & Broadcasting",
+            "description": "Develop the WebSocket server logic to handle incoming 'sendChatMessage' events from clients, validate data, call the tRPC procedure to save the message, and broadcast the message to all relevant clients in the chat room.",
+            "dependencies": [
+              2
+            ],
+            "details": "Set up an event listener on the WebSocket server for the 'sendChatMessage' event. Inside the listener, extract message data, perform basic validation, call the server-side `saveChatMessage` tRPC procedure (or equivalent direct database call), and then use the WebSocket server's broadcast mechanism to send the saved message data to all clients currently connected and subscribed to the specific `roomId`.",
+            "status": "pending",
+            "testStrategy": "Use a WebSocket client tool (like Postman or a simple script) to connect to the server and send a 'sendChatMessage' event. Verify that the message is saved in the database and that the server broadcasts the message back to the sending client and any other clients connected to the same room."
+          },
+          {
+            "id": 4,
+            "title": "Implement Client-side WebSocket Connection & Sending",
+            "description": "Develop the SolidStart client-side code to establish a WebSocket connection to the server and send 'sendChatMessage' events when the user submits a message via the UI.",
+            "dependencies": [
+              3
+            ],
+            "details": "In the SolidStart application, establish a WebSocket connection to the server URL when the chat component mounts. Implement an input field and a send button/event listener (e.g., on Enter key). When triggered, format the message data (including room ID and sender ID) and send it over the established WebSocket connection using `ws.send()`. Handle potential connection errors and states.",
+            "status": "pending",
+            "testStrategy": "Run the SolidStart application. Open the chat UI, type a message, and click send or press Enter. Monitor the browser's network tab to confirm that a WebSocket message is sent to the server with the correct event name ('sendChatMessage') and payload."
+          },
+          {
+            "id": 5,
+            "title": "Implement Client-side Chat UI & Message Display/Receiving",
+            "description": "Develop the SolidStart client-side UI components to display chat messages and the logic to receive new messages from the WebSocket connection, updating the UI in real-time.",
+            "dependencies": [
+              4
+            ],
+            "details": "Create a SolidStart component to render the list of chat messages. Implement a WebSocket event listener (e.g., for 'message' or a custom event type from the server containing the new message). When a new message is received via the WebSocket, update the component's state (e.g., an array of messages) to include the new message, causing the UI list to re-render and display the message.",
+            "status": "pending",
+            "testStrategy": "Open two instances of the SolidStart application connected to the same chat room. Send a message from one instance using the UI. Verify that the message appears instantly in the chat list UI of both instances."
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "title": "Basic UI Layout and Navigation (SolidStart, Tailwind, DaisyUI)",
+        "description": "Implement the main application layout (header, footer, navigation) and basic routing using SolidStart, styled with Tailwind CSS and DaisyUI components.",
+        "details": "// workspaces/webapp/src/root.tsx or layout components.\n// Use SolidStart's file-system routing for pages like /, /login, /profile, /game/:id.\n// Implement responsive header with navigation, user status (login/logout, avatar).\n// Use DaisyUI components (Button, Modal, Navbar, Card) and Tailwind CSS for styling.",
+        "testStrategy": "Main application layout renders correctly. Navigation links work. UI is responsive. DaisyUI components are used appropriately.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Project Setup (SolidStart, Tailwind, DaisyUI)",
+            "description": "Initialize the SolidStart project and configure Tailwind CSS and DaisyUI according to their official documentation.",
+            "dependencies": [],
+            "details": "Follow the installation guides for SolidStart, Tailwind CSS with SolidJS, and DaisyUI. Ensure necessary dependencies are installed and configuration files (tailwind.config.js, postcss.config.js) are set up correctly. Verify CSS imports in the main entry file.",
+            "status": "pending",
+            "testStrategy": "Run the development server and verify that Tailwind utility classes and basic DaisyUI component classes (e.g., 'btn') can be applied and render correctly in a simple test component."
+          },
+          {
+            "id": 2,
+            "title": "Create Base Layout Structure",
+            "description": "Implement the main application layout component (e.g., within src/root.tsx or a dedicated layout file) that defines the overall structure including placeholders for header, main content area, and footer.",
+            "dependencies": [
+              1
+            ],
+            "details": "Modify src/root.tsx to include the basic HTML structure (<html>, <body>). Use SolidStart's <FileRoutes /> within a main content container. Add placeholder elements or comments for where the header and footer components will be placed.",
+            "status": "pending",
+            "testStrategy": "Run the development server and inspect the page source or use browser developer tools to confirm the basic HTML structure and the presence of the main content container and placeholders."
+          },
+          {
+            "id": 3,
+            "title": "Implement Responsive Header with Navigation",
+            "description": "Create a dedicated Header component that includes navigation links (e.g., Home, Login, Profile) and placeholders for user status (avatar/login button). Use the DaisyUI Navbar component structure.",
+            "dependencies": [
+              2
+            ],
+            "details": "Create a new component file (e.g., src/components/Header.tsx). Use DaisyUI 'navbar' classes and structure for the header. Include <a> tags or SolidStart <A> components for navigation links. Add simple placeholders (e.g., a div or span) for the user avatar and login/logout button area. Integrate this component into the base layout created in subtask 2.",
+            "status": "pending",
+            "testStrategy": "Run the development server and visually verify that the header component renders at the top of the page, contains the specified navigation links, and is responsive (e.g., check on different screen sizes)."
+          },
+          {
+            "id": 4,
+            "title": "Configure File-System Routing",
+            "description": "Set up the basic file-system routing for the specified pages by creating the necessary file structure within the src/routes directory.",
+            "dependencies": [
+              2
+            ],
+            "details": "Create the following files in src/routes: index.tsx (for '/'), login.tsx (for '/login'), profile.tsx (for '/profile'), and game/[id].tsx (for '/game/:id'). Add minimal placeholder content (e.g., an <h1> tag with the page title) to each file.",
+            "status": "pending",
+            "testStrategy": "Run the development server and navigate directly to /, /login, /profile, and /game/123 (or any ID) in the browser. Verify that the correct placeholder content for each route is displayed in the main content area."
+          },
+          {
+            "id": 5,
+            "title": "Apply Styling and Integrate DaisyUI Components",
+            "description": "Apply Tailwind CSS utility classes and integrate specific DaisyUI components (like Button, Card) to style the layout, header, and basic page content.",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "Refine the styling of the base layout and header using Tailwind classes for spacing, padding, colors, etc. Replace the user status placeholder in the header with a DaisyUI Button component for login/logout. Optionally, use a DaisyUI Card component for the profile page placeholder content. Ensure responsive styling is applied.",
+            "status": "pending",
+            "testStrategy": "Visually inspect the application in the browser. Verify that the layout and header have the intended styling, DaisyUI components are rendered correctly, and the basic styling is applied across the different routes."
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "title": "Implement 3D Chessboard Rendering with Three.js",
+        "description": "Develop the 3D chessboard and piece rendering component using Three.js within the SolidStart application.",
+        "details": "// Create a SolidJS component for the 3D board (e.g., <ThreeDeeBoard />).\n// Initialize Three.js scene, camera, renderer, and lighting.\n// Load/create 3D models for board and pieces (e.g., using GLTFLoader for .glb files).\n// Implement functions to render board and place pieces based on game state (FEN string or similar).\n// Add basic camera controls (OrbitControls).\n// Handle piece selection and drag-and-drop or click-to-move interactions.",
+        "testStrategy": "3D chessboard renders with pieces in initial positions. User can interact with the board (rotate, zoom). Pieces can be moved programmatically.",
+        "priority": "high",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Implement User Registration and Login UI Flows",
+        "description": "Create frontend forms and UI elements for user registration (email/password, Google) and login, integrating with the authentication backend.",
+        "details": "// Create SolidJS components for registration and login forms using DaisyUI form controls.\n// Handle form submission, call tRPC auth procedures (from Task 9).\n// Display validation errors (from Zod in tRPC) and success/error messages.\n// Redirect user upon successful login/registration using SolidStart router.\n// Implement \"Login with Google\" button triggering the OAuth flow.",
+        "testStrategy": "Users can successfully register and log in using the UI. Error messages are displayed. Google login flow works. Email verification and password reset UIs are present.",
+        "priority": "high",
+        "dependencies": [
+          9,
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Develop User Profile Management UI",
+        "description": "Create UI for users to view and edit their profiles (avatar, bio, name) and manage settings (notifications, privacy, preferred skins).",
+        "details": "// Profile page (/profile): Display user info (name, email, rating, bio, avatar).\n// Edit profile form: Allow updates to name, bio. Avatar upload via Task 24.\n// Settings page (/settings): UI for toggling notification preferences, privacy settings.\n// Skin selection UI (links to Task 25).\n// Call tRPC endpoints to fetch and update user profile data and settings.",
+        "testStrategy": "User can view and update their profile information. Avatar can be uploaded and displayed. Settings can be changed and persisted.",
+        "priority": "medium",
+        "dependencies": [
+          9,
+          14
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Build Profile Display UI & Fetch Data",
+            "description": "Create the initial read-only UI for the user profile page (/profile) and implement the tRPC call to fetch and display the user's current data (name, email, rating, bio, avatar).",
+            "dependencies": [],
+            "details": "Design and implement the layout for /profile. Use tRPC to fetch user data on page load. Display name, email, rating, bio, and avatar.",
+            "status": "pending",
+            "testStrategy": "Verify the profile page loads and displays the correct user data fetched from the backend."
+          },
+          {
+            "id": 2,
+            "title": "Build Edit Profile Form UI",
+            "description": "Create the UI for the edit profile form, allowing users to modify their name and bio. This form should be accessible from the profile page.",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement a form with input fields for name and bio. Include a save button. Prepare for integration with avatar upload (Task 24) but do not implement avatar upload logic here.",
+            "status": "pending",
+            "testStrategy": "Verify the edit profile form UI is correctly rendered with editable fields for name and bio."
+          },
+          {
+            "id": 3,
+            "title": "Build Settings Page UI",
+            "description": "Create the UI for the user settings page (/settings), including controls for notification preferences and privacy settings.",
+            "dependencies": [],
+            "details": "Design and implement the layout for /settings. Include toggle switches or checkboxes for various notification preferences and privacy options.",
+            "status": "pending",
+            "testStrategy": "Verify the settings page loads and displays interactive controls for notifications and privacy."
+          },
+          {
+            "id": 4,
+            "title": "Integrate Skin Selection UI Link",
+            "description": "Add a UI element (e.g., a link or button) on the settings page that directs the user to the skin selection functionality (Task 25).",
+            "dependencies": [
+              3
+            ],
+            "details": "Add a section or link within the settings page UI that clearly indicates 'Skin Selection' or similar, linking to the relevant part of the application handled by Task 25.",
+            "status": "pending",
+            "testStrategy": "Verify the skin selection element is present on the settings page and is interactive."
+          },
+          {
+            "id": 5,
+            "title": "Implement Data Update Logic",
+            "description": "Add the functionality to handle form submissions on the edit profile form and settings page, calling the appropriate tRPC endpoints to save updated profile data (name, bio) and settings (notifications, privacy).",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Implement event handlers for the save buttons on the edit profile form and settings page. Collect data from the UI fields and use tRPC mutations to send updates to the backend.",
+            "status": "pending",
+            "testStrategy": "Verify that submitting the edit profile form updates name/bio correctly and submitting the settings page updates notification/privacy settings correctly via tRPC calls."
+          }
+        ]
+      },
+      {
+        "id": 18,
+        "title": "Implement Basic Game Creation and Joining UI",
+        "description": "Develop UI for users to create new games (public/private, select side) or join existing public games/games by ID.",
+        "details": "// \"Create Game\" UI: Options for time controls, side, public/private.\n// \"Join Game\" UI: List public games (if any), input field for game ID.\n// Call tRPC endpoints to create/join games, which interact with game logic (Task 12).\n// Redirect to game view (/game/:id) upon successful creation/joining.",
+        "testStrategy": "User can create a new game. Another user can join the created game. Users are correctly assigned to games and redirected.",
+        "priority": "medium",
+        "dependencies": [
+          10,
+          12,
+          14
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Develop Create Game Form UI",
+            "description": "Implement the user interface elements for creating a new game.",
+            "dependencies": [],
+            "details": "Build the HTML/JSX structure for the 'Create Game' form. Include input fields or controls for selecting time controls, choosing a side (e.g., White, Black, Random), and setting the game visibility (Public/Private).",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Develop Join Game UI",
+            "description": "Implement the user interface elements for joining an existing game.",
+            "dependencies": [],
+            "details": "Build the HTML/JSX structure for the 'Join Game' section. Include an area to potentially list public games (initially empty or placeholder) and an input field for entering a specific game ID to join.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement Create Game Logic and tRPC Call",
+            "description": "Add functionality to the Create Game form to collect data and call the backend.",
+            "dependencies": [
+              1
+            ],
+            "details": "Add event handlers to the 'Create Game' form submission. Collect the selected time controls, side, and visibility settings from the UI elements. Call the appropriate tRPC endpoint (e.g., `trpc.game.create.mutate()`) with the collected data. Handle loading and potential error states.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement Join Game Logic and tRPC Call",
+            "description": "Add functionality to the Join Game section to handle joining actions and call the backend.",
+            "dependencies": [
+              2
+            ],
+            "details": "Add event handlers for joining actions (e.g., a button click for joining by ID, or future list item clicks for public games). Retrieve the game ID from the input field or selected public game. Call the appropriate tRPC endpoint (e.g., `trpc.game.join.mutate()`) with the game ID. Handle loading and potential error states.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement Post-Join/Create Redirection",
+            "description": "Navigate the user to the game view upon successful game creation or joining.",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "After a successful response from either the `createGame` or `joinGame` tRPC call, extract the new or joined game's ID from the response data. Use a client-side router (e.g., Next.js router) to programmatically navigate the user to the dynamic route `/game/:id`, replacing `:id` with the actual game ID.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 19,
+        "title": "Implement Gameplay UI (Move Input, Timer, State)",
+        "description": "Develop the main gameplay interface, including interaction with the 3D board for making moves, displaying timers, game status, and player information.",
+        "details": "// Integrate 3D board (Task 15) into the game view (/game/:id).\n// Implement move input logic on 3D board (e.g., click piece, click square).\n// Send valid moves to WebSocket server (Task 12).\n// Display player names, ratings, and synchronized timers.\n// Show current turn indicator and captured pieces.\n// Display game result (checkmate, stalemate, resignation) and offer relevant actions.",
+        "testStrategy": "Players can make moves on the 3D board. Moves are validated and reflected for both players. Timers update. Game status is displayed.",
+        "priority": "high",
+        "dependencies": [
+          12,
+          13,
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Implement In-Game Chat UI",
+        "description": "Create the UI for in-game chat, allowing players and spectators to send and receive messages during a game.",
+        "details": "// Chat panel component within the game view.\n// Input field for typing messages, send button.\n// Display area for chat messages (sender, message, timestamp).\n// Connect to WebSocket chat functionality (Task 13).\n// Auto-scroll to new messages. Basic emoji support.",
+        "testStrategy": "Chat messages sent by one user appear for other users in the same game. Chat UI is usable and updates in real-time.",
+        "priority": "medium",
+        "dependencies": [
+          13,
+          14,
+          19
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Basic Chat Panel Structure",
+            "description": "Implement the fundamental HTML/JSX structure and initial CSS layout for the chat panel container, the message display area, and the message input area.",
+            "dependencies": [],
+            "details": "Create the main container element for the chat panel. Inside, add a div for displaying messages and another div/form for the input field and send button. Apply basic flexbox or grid layout to arrange these sections vertically. Ensure the display area has a defined height and is scrollable.",
+            "status": "pending",
+            "testStrategy": "Verify the basic structure renders correctly in the game view with distinct areas for messages and input."
+          },
+          {
+            "id": 2,
+            "title": "Implement Message Input Field and Send Button",
+            "description": "Add the text input field and the send button within the input area structure created in subtask 1. Implement basic event handling for typing and clicking the send button.",
+            "dependencies": [
+              1
+            ],
+            "details": "Place an `<input type='text'>` or `<textarea>` element and a `<button>` element within the input area. Add event listeners for 'input' or 'change' on the input field and 'click' on the button. Capture the input value when the button is clicked or 'Enter' is pressed in the input field. Do not implement sending logic yet.",
+            "status": "pending",
+            "testStrategy": "Verify the input field allows typing and the send button is clickable. Check that input value can be captured on button click."
+          },
+          {
+            "id": 3,
+            "title": "Develop Message Display Rendering Logic",
+            "description": "Implement the logic to dynamically add and display individual chat messages within the message display area, including sender name, message text, and timestamp.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create a component or function that takes a message object (e.g., `{ sender: 'Player1', text: 'Hello!', timestamp: '10:00' }`) and renders it as a list item or div within the message display area. Format the sender, message, and timestamp clearly. Use placeholder data initially to test rendering.",
+            "status": "pending",
+            "testStrategy": "Provide sample message data and verify that messages are rendered correctly in the display area with proper formatting for sender, text, and timestamp."
+          },
+          {
+            "id": 4,
+            "title": "Implement Auto-Scroll and Basic Styling",
+            "description": "Add functionality to automatically scroll the message display area to the bottom when new messages are added. Apply basic visual styling for readability.",
+            "dependencies": [
+              1,
+              3
+            ],
+            "details": "After a new message element is added to the display area (using the logic from subtask 3), programmatically scroll the display area's container element to its maximum scroll height. Apply CSS for padding, margins, text color, background color, and potentially different styles for sender names or timestamps to improve readability.",
+            "status": "pending",
+            "testStrategy": "Add multiple messages programmatically and verify that the display area automatically scrolls to show the latest message at the bottom. Check that basic styling is applied."
+          },
+          {
+            "id": 5,
+            "title": "Integrate WebSocket and Handle Messages/Emoji",
+            "description": "Connect the UI to the WebSocket chat service (Task 13) to send messages from the input field and receive messages to display. Add basic handling for displaying simple emojis.",
+            "dependencies": [
+              2,
+              3,
+              4
+            ],
+            "details": "Establish a connection to the WebSocket service (Task 13). When the send button is clicked (from subtask 2), send the message text via the WebSocket. Implement a listener for incoming WebSocket messages; when a message is received, use the rendering logic (from subtask 3) to display it. Ensure received messages trigger the auto-scroll (from subtask 4). Add basic logic to recognize common emoji characters (like ':)' or '❤️') and display them appropriately (e.g., using emoji characters or simple image replacements).",
+            "status": "pending",
+            "testStrategy": "Connect to the WebSocket service. Send messages from the UI and verify they are received by other clients (if possible) or logged by the server. Receive messages from another source and verify they appear in the UI and trigger auto-scroll. Test sending/receiving messages containing basic emojis."
+          }
+        ]
+      },
+      {
+        "id": 21,
+        "title": "Integrate Stripe for Membership Payments",
+        "description": "Integrate Stripe for handling monthly/annual membership payments. Set up subscription plans and implement the checkout flow.",
+        "details": "// Set up products and subscription plans (free, premium - monthly/annual) in Stripe dashboard.\n// tRPC endpoint to create Stripe Checkout session for subscription.\n// Frontend UI for selecting membership tier and redirecting to Stripe Checkout.\n// Success and cancel URLs for Stripe Checkout handled by SolidStart routes.\n// Store Stripe customer ID and subscription details on User model (Prisma).\n// Update user's membershipTier based on active subscription.",
+        "testStrategy": "User can select a premium plan and complete payment via Stripe Checkout. User's membership status is updated in the database and UI.",
+        "priority": "high",
+        "dependencies": [
+          8,
+          9,
+          10,
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Implement Stripe Webhook Handling",
+        "description": "Create a tRPC endpoint to handle Stripe webhooks for events like payment success, subscription updates, and cancellations.",
+        "details": "// Create a dedicated tRPC procedure or API route in SolidStart for Stripe webhooks (e.g., /api/webhooks/stripe).\n// Verify Stripe webhook signature using `stripe.webhooks.constructEvent`.\n// Handle events: `checkout.session.completed`, `invoice.payment_succeeded`, `customer.subscription.updated`, `customer.subscription.deleted`.\n// Update user's membership status and payment records in DB via Prisma.\n// Ensure idempotent webhook handling.",
+        "testStrategy": "Webhook endpoint correctly processes Stripe events. User membership status is updated accurately. Webhook signature verification works.",
+        "priority": "high",
+        "dependencies": [
+          8,
+          10,
+          21
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Stripe Webhook Endpoint",
+            "description": "Set up the dedicated tRPC procedure or API route in SolidStart to receive incoming Stripe webhook POST requests.",
+            "dependencies": [],
+            "details": "Create a new file or procedure (e.g., `/src/server/api/routers/webhooks.ts` or `/src/routes/api/webhooks/stripe.ts`) that can handle POST requests. Configure it to accept raw body data, as required by Stripe's signature verification.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Webhook Signature Verification",
+            "description": "Add logic within the webhook endpoint to verify the authenticity of the incoming request using the Stripe signature header and the raw request body.",
+            "dependencies": [
+              1
+            ],
+            "details": "Retrieve the `Stripe-Signature` header and the raw request body. Use `stripe.webhooks.constructEvent(rawBody, signature, webhookSecret)` to verify the signature and construct the event object. Handle potential `JsonBodyError` or `SignatureVerificationError`.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Parse and Identify Stripe Event",
+            "description": "Extract the event object from the verified request and identify the type of Stripe event received.",
+            "dependencies": [
+              2
+            ],
+            "details": "After successful signature verification, the `constructEvent` method returns a Stripe `Event` object. Access the `event.type` property to determine which event occurred (e.g., `checkout.session.completed`, `invoice.payment_succeeded`).",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement Specific Event Handling Logic",
+            "description": "Add conditional logic to process the data payload based on the identified Stripe event type.",
+            "dependencies": [
+              3
+            ],
+            "details": "Use a switch statement or if/else structure based on `event.type`. For each specified event (`checkout.session.completed`, `invoice.payment_succeeded`, `customer.subscription.updated`, `customer.subscription.deleted`), extract the relevant data from `event.data.object`.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Update Database and Ensure Idempotency",
+            "description": "Perform necessary database operations using Prisma based on the event data and implement a mechanism to prevent processing the same event multiple times.",
+            "dependencies": [
+              4
+            ],
+            "details": "Within each event handler (from subtask 4), use Prisma client to update user membership status, create payment records, or modify subscription details. Implement idempotency by storing processed event IDs in the database and checking if an event has already been processed before acting on it.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 23,
+        "title": "Integrate Google Ads for Non-Member Users",
+        "description": "Implement Google Ads display logic for users on the free membership tier. Ensure privacy compliance.",
+        "details": "// Sign up for Google AdSense or Google Ad Manager.\n// Add Google Ads script to the SolidStart app's main HTML file or via a component.\n// Strategically place ad units in the UI (e.g., sidebars, below content) using SolidJS conditional rendering based on user's membershipTier.\n// Implement consent management (e.g., for GDPR) if necessary.",
+        "testStrategy": "Ads are displayed for free users in designated ad slots. Ads are not displayed for premium users. Ad rendering does not break UI.",
+        "priority": "medium",
+        "dependencies": [
+          8,
+          14,
+          21
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Integrate MinIO for User Avatar Uploads",
+        "description": "Implement functionality for users to upload avatar images, storing them in MinIO. Generate presigned URLs for secure uploads.",
+        "details": "// tRPC endpoint to generate a presigned PUT URL for uploading to MinIO.\n// Specify bucket (e.g., 'user-avatars'), object key (e.g., <userId>.png), and content type.\n// Frontend UI: File input for avatar selection in profile settings (Task 17).\n// On file selection, request presigned URL from backend.\n// Upload file directly to MinIO from the client using the presigned URL (fetch PUT).\n// After successful upload, tRPC call to update user's avatarUrl in the database (Prisma).\n// Ensure appropriate CORS configuration on MinIO bucket.",
+        "testStrategy": "User can upload an avatar image. Image is stored in MinIO. Avatar is displayed on the user's profile. Presigned URL mechanism works securely.",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          8,
+          10,
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Implement Board and Piece Skin Customization (MinIO & DB)",
+        "description": "Allow users to select custom board and piece skins. Store skin assets in MinIO and user preferences in the database. Skins should be visible to opponents/spectators.",
+        "details": "// Admin process for uploading official skin assets (3D models, textures for Three.js) to a 'skins' bucket in MinIO.\n// Define Asset schema for skins (type: \"board_skin\", \"piece_skin\", url pointing to MinIO asset).\n// tRPC endpoints to list available skins (querying Asset table).\n// User settings UI (Task 17) to select preferred board and piece skins.\n// Store user's skin preferences (e.g., asset IDs) in User.settings (JSONB field).\n// When rendering a game (Task 15), fetch skin preferences for both players. Load and apply selected skin assets from MinIO in Three.js.",
+        "testStrategy": "Users can select from available board and piece skins. Selected skins are applied to their 3D board. Opponent's chosen skins are visible.",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          8,
+          10,
+          15,
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "Implement SSR Meta Tags, Sitemap, and robots.txt",
+        "description": "Enhance SEO by implementing dynamic SSR meta tags (title, description) for relevant pages, generating a sitemap.xml, and providing a robots.txt file.",
+        "details": "// SolidStart SSR: Use `<Meta>` component from `@solidjs/meta` to set dynamic tags in route components (e.g., for game pages, user profiles).\n// Create a tRPC endpoint or build script to generate sitemap.xml listing public pages.\n// Serve sitemap.xml (e.g., /sitemap.xml) via a SolidStart route.\n// Create and serve a public/robots.txt file.",
+        "testStrategy": "Pages have correct and dynamic meta tags when viewed with SSR. /sitemap.xml is accessible and valid. /robots.txt is accessible.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          10
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Dynamic Meta Tags for Game Pages",
+            "description": "Use `@solidjs/meta`'s `<Meta>` component within the game page route component to set dynamic title and description based on game data fetched for the page.",
+            "dependencies": [],
+            "details": "Modify the game page route component. Fetch game data using a route loader or within the component. Use `<Title>` and `<Meta name=\"description\" content=\"...\">` components, binding their content to the fetched game data (e.g., game title, summary).",
+            "status": "pending",
+            "testStrategy": "Navigate to several different game pages. Use browser developer tools or 'View Page Source' to inspect the `<head>` section and verify that the `<title>` and `<meta name=\"description\">` tags are present and contain accurate, dynamic content specific to each game."
+          },
+          {
+            "id": 2,
+            "title": "Implement Dynamic Meta Tags for User Profile Pages",
+            "description": "Use `@solidjs/meta`'s `<Meta>` component within the user profile route component to set dynamic title and description based on user data fetched for the page.",
+            "dependencies": [],
+            "details": "Modify the user profile route component. Fetch user data using a route loader or within the component. Use `<Title>` and `<Meta name=\"description\" content=\"...\">` components, binding their content to the fetched user data (e.g., username, profile summary).",
+            "status": "pending",
+            "testStrategy": "Navigate to several different user profile pages. Use browser developer tools or 'View Page Source' to inspect the `<head>` section and verify that the `<title>` and `<meta name=\"description\">` tags are present and contain accurate, dynamic content specific to each user profile."
+          },
+          {
+            "id": 3,
+            "title": "Develop Sitemap Generation Logic",
+            "description": "Create a script or tRPC endpoint that queries public routes and dynamic data (like game IDs, user IDs) and generates a valid `sitemap.xml` string or file content.",
+            "dependencies": [],
+            "details": "Identify all public static routes. Query the database or API to get IDs for dynamic public pages (e.g., all public game IDs, all public user IDs). Construct an XML string or object structure conforming to the sitemap protocol, including `<url>`, `<loc>`, `<lastmod>`, `<changefreq>`, and `<priority>` tags for each relevant page.",
+            "status": "pending",
+            "testStrategy": "Execute the sitemap generation logic manually (run the script or call the tRPC endpoint). Validate the output XML against the sitemap schema using an online validator or XML parser. Ensure all expected public URLs (static and dynamic) are included."
+          },
+          {
+            "id": 4,
+            "title": "Configure SolidStart Route to Serve Sitemap",
+            "description": "Create a SolidStart route handler (e.g., `/sitemap.xml`) that executes the sitemap generation logic and serves the resulting XML content with the correct content type.",
+            "dependencies": [
+              3
+            ],
+            "details": "Create a route file (e.g., `src/routes/sitemap.xml.ts`). Inside the route handler, call the sitemap generation logic developed in subtask 3. Set the response headers, specifically `Content-Type` to `application/xml`. Return the generated XML string as the response body.",
+            "status": "pending",
+            "testStrategy": "Start the SolidStart development server or build and serve the production build. Navigate to `/sitemap.xml` in a web browser. Verify that the content displayed is the generated XML and that the browser interprets it as XML (often shown with syntax highlighting)."
+          },
+          {
+            "id": 5,
+            "title": "Create and Serve robots.txt",
+            "description": "Create a `robots.txt` file in the `public` directory with appropriate directives and ensure SolidStart serves it correctly.",
+            "dependencies": [],
+            "details": "Create a file named `robots.txt` inside the `public` directory at the root of the project. Add standard directives like `User-agent: *`, `Allow: /`, and include the `Sitemap:` directive pointing to the `/sitemap.xml` URL. Verify SolidStart's configuration ensures files in the `public` directory are served statically.",
+            "status": "pending",
+            "testStrategy": "Start the SolidStart development server or build and serve the production build. Navigate to `/robots.txt` in a web browser. Verify that the content of the `robots.txt` file is displayed correctly and matches the file created in the `public` directory."
+          }
+        ]
+      },
+      {
+        "id": 27,
+        "title": "Integrate `solid-i18n` for Basic Multilingual Support",
+        "description": "Set up `solid-i18n` for internationalization, providing initial translations for UI elements in English and one additional language.",
+        "details": "// Install and configure `solid-i18n` in the SolidStart app (`workspaces/webapp`).\n// Create locale files (e.g., public/locales/en.json, public/locales/es.json) with key-value pairs.\n// Use `solid-i18n`'s API (`useI18n`, `t` function) to translate text in components.\n// Implement a language switcher UI element.\n// Store user's language preference (localStorage or user profile) and load it on app start.",
+        "testStrategy": "UI text is translated based on selected language. Language switcher works. SSR renders pages in the correct language.",
+        "priority": "low",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 28,
+        "title": "Setup Unit and Integration Testing Framework (Vitest)",
+        "description": "Configure Vitest for unit and integration testing of SolidJS components, tRPC procedures, and utility functions. Write initial tests for critical logic.",
+        "details": "# Install Vitest, @solidjs/testing-library, @testing-library/jest-dom.\n# Configure vitest.config.ts in workspaces/webapp and other relevant packages.\n# Write unit tests for: utility functions, SolidJS components (rendering, basic interactions), tRPC procedures (mocking context/Prisma, testing business logic).\n# Focus on core auth, game logic, payment processing.\n# Integrate test execution into CI pipeline (Task 7).",
+        "testStrategy": "Unit tests run successfully via `pnpm test`. Test coverage reports can be generated. CI pipeline executes tests.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          10
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 29,
+        "title": "Setup E2E Testing Framework (Playwright)",
+        "description": "Configure Playwright for end-to-end testing of key user flows, such as registration, login, game creation, and gameplay.",
+        "details": "# Install Playwright.\n# Configure playwright.config.ts.\n# Write E2E tests for critical user flows: User registration & login, Create game, Join game, Make moves, Basic profile update.\n# Run E2E tests against a local dev server or staging environment.\n# Integrate E2E test execution into CI pipeline.",
+        "testStrategy": "E2E tests for key user flows pass consistently. Tests can be run locally and in CI.",
+        "priority": "medium",
+        "dependencies": [
+          6,
+          7,
+          16,
+          18,
+          19
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 30,
+        "title": "Implement Basic Logging (Winston/Pino) and Error Reporting (Sentry)",
+        "description": "Integrate a logging library (Winston or Pino) for server-side logging and Sentry for client-side and server-side error reporting.",
+        "details": "// Server-side (SolidStart tRPC, WebSocket server):\n// - Install Winston or Pino. Configure log levels, formats, transports.\n// - Add logging for important events, errors, requests.\n// - Integrate Sentry SDK for Node.js to capture unhandled exceptions and report errors.\n\n// Client-side (SolidStart frontend):\n// - Integrate Sentry SDK for JavaScript/SolidJS.\n// - Configure Sentry to capture frontend errors.\n// - Set up source maps for Sentry.\n\n// Store SENTRY_DSN in infisical (Task 3).",
+        "testStrategy": "Server logs are generated. Errors on server and client are reported to Sentry with useful context and source maps.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3,
+          10,
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-06-23T20:44:46.153Z",
+      "updated": "2025-06-23T20:55:11.424Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

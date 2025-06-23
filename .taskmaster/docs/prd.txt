@@ -1,0 +1,267 @@
+# 3D Chess Web Platform – Product Requirements Document (PRD)
+
+---
+
+## 1. Overview
+
+The 3D Chess Web Platform is a next-generation, browser-based chess service designed to deliver an immersive, real-time multiplayer chess experience. It targets chess enthusiasts, casual players, and learners seeking a visually engaging, interactive, and social environment. The platform solves the problem of outdated, 2D-only chess interfaces by providing a customizable 3D board and piece experience, real-time gameplay, and integrated social features. Its value lies in its modern tech stack, scalability, and focus on user experience, accessibility, and extensibility for future features.
+
+- **Target Users:**
+  - Chess players (casual to advanced)
+  - Streamers and content creators
+  - Educators and students
+  - Developers and open-source contributors
+
+- **Core Value Propositions:**
+  - Real-time, visually rich 3D chess gameplay
+  - Seamless multiplayer and spectator support
+  - Customizable boards, pieces, and user profiles
+  - Integrated chat, payments, and advertising
+  - Scalable, maintainable, and developer-friendly architecture
+
+---
+
+## 2. Core Features
+
+### 2.1 Gameplay
+- 3D chessboard and piece rendering using Three.js
+- Support for 1:1 and 1:N (multiple spectators/participants) matches
+- Real-time game state synchronization via WebSocket server
+- User-customizable board and piece skins (persisted and visible to others)
+- Move validation, timers, and game result tracking
+- Game replays and downloadable PGN support
+
+### 2.2 Chat
+- In-game real-time chat (WebSocket-based)
+- 1:1 and group chat support
+- Moderation tools (mute, report, block)
+- Emoji and media sharing (images, GIFs)
+
+### 2.3 User Management
+- Email-password and Google OAuth2 login (Better Auth)
+- JWT-based authentication/session management
+- User profile with avatar, bio, and rating
+- Settings for notifications, privacy, and skins
+- Password reset and email verification flows
+
+### 2.4 Payments & Advertising
+- Stripe-based membership payments (monthly/annual)
+- Membership tiers (free, premium)
+- Google Ads integration for non-members
+- Webhook handling for payment events
+- Ad display logic and privacy compliance
+
+### 2.5 SEO & Accessibility
+- SSR meta tags, sitemap, robots.txt
+- Multilingual support (solid-i18n)
+- Accessibility (A11y) compliance for all UI and 3D elements
+
+### 2.6 Media & Asset Management
+- Images, videos, and assets stored/served via MinIO object storage
+- Presigned URLs for secure uploads/downloads
+- Versioning and lifecycle management for assets
+- Efficient delivery and caching strategies
+
+---
+
+## 3. User Experience
+
+### 3.1 User Personas
+- **Competitive Player:** Seeks fast, reliable matchmaking and advanced analysis tools
+- **Casual Player:** Values ease of use, customization, and social features
+- **Spectator/Streamer:** Wants to watch games, chat, and share content
+- **Admin/Moderator:** Needs tools for user management and content moderation
+
+### 3.2 Key User Flows
+- **Sign Up & Login:**
+  - Register via email/password or Google
+  - Email verification and onboarding
+- **Game Creation & Matchmaking:**
+  - Create/join public or private games
+  - Invite friends or play with random opponents
+- **Gameplay:**
+  - 3D board interaction (drag/drop, rotate, zoom)
+  - Real-time move updates and chat
+  - Timer and result handling
+- **Profile & Customization:**
+  - Edit profile, upload avatar, select board/piece skins
+  - Save and share customizations
+- **Payments & Membership:**
+  - Upgrade to premium, manage subscription
+  - View payment history
+- **Spectating & Chat:**
+  - Join as spectator, participate in chat
+  - Share games and highlights
+
+### 3.3 UI/UX Considerations
+- Responsive design for desktop, tablet, and mobile
+- Intuitive navigation and clear call-to-actions
+- Accessible color schemes and keyboard navigation
+- Real-time feedback for actions (moves, chat, payments)
+- Loading states, error handling, and notifications
+- Consistent use of DaisyUI components and Tailwind CSS
+
+---
+
+## 4. Technical Architecture
+
+### 4.1 System Components
+- **Fullstack App:** SolidStart (SSR/CSR/SSG), Tailwind CSS v4, DaisyUI, Three.js, tRPC (type-safe, end-to-end API)
+  - All frontend and backend (tRPC API) logic will be implemented together in the `workspaces/webapp` directory.
+  - All API logic, routers, and server-side code will be integrated within the Solid-Start app structure.
+  - There will be no separate backend app or directory. All references to a separate backend-api app are obsolete and should be disregarded.
+- **Real-time Server:** Dedicated WebSocket server (separate app)
+- **Database:** Supabase (PostgreSQL), Prisma schema/client, and all migrations are located in `workspaces/database`. The webapp imports the Prisma client from this workspace using `import { prisma } from "@unique-chess/database"`.
+- **Object Storage:** MinIO (S3-compatible)
+- **Authentication:** Better Auth (JWT, email-password, Google OAuth2)
+- **Payments:** Stripe (webhooks, membership management)
+- **Advertising:** Google Ads (server-side logic)
+- **CI/CD:** GitHub Actions, Docker, Netlify/Fly.io
+- **Secrets Management:** infisical
+- **Monorepo Management:** Turborepo
+
+### 4.2 Data Models
+- **User:** id, email, password_hash, profile, settings, membership, skins, rating
+- **Game:** id, player_ids, moves, state, timers, result, spectators, chat_id
+- **Chat:** id, participants, messages, created_at
+- **Payment:** id, user_id, stripe_id, status, tier, created_at
+- **Asset:** id, owner_id, type, url, version, metadata
+
+### 4.3 APIs and Integrations
+- **tRPC Routers:** Organized by domain (game, user, chat, payment, asset)
+- **WebSocket Events:** Game state, chat, presence, notifications
+- **Stripe Webhooks:** Payment success, failure, subscription updates
+- **MinIO Integration:** Presigned URLs, versioning, lifecycle
+- **Google Ads:** Ad serving logic, privacy compliance
+
+### 4.4 Infrastructure Requirements
+- **Dockerized services:** Frontend, WebSocket server, MinIO, Supabase DBs
+- **Orchestration:** docker-compose for local, Netlify/Fly.io for prod
+- **Monitoring:** Logging (Winston/Pino), Sentry, Prometheus
+- **Security:** HTTPS, JWT validation, password hashing (bcrypt/argon2), rate limiting, helmet, CSRF/XSS protection
+
+---
+
+## 5. Development Roadmap
+
+### 5.1 MVP Requirements
+- User authentication (email/password, Google)
+- 3D chessboard with basic gameplay
+- Real-time multiplayer (WebSocket)
+- User profiles and basic customization
+- In-game chat
+- Stripe payments for premium
+- Google Ads for non-members
+- MinIO integration for asset storage
+- SSR meta tags and basic i18n
+- Dockerized local development
+- **All frontend and backend (tRPC API) logic implemented together in `workspaces/webapp` using Solid-Start.**
+
+### 5.2 Future Enhancements
+- Game analysis tools (move suggestions, heatmaps)
+- Advanced matchmaking and ranking
+- Tournament support
+- Game replays and downloadable PGN
+- Social features (friends, leaderboards)
+- Mobile app (PWA or native)
+- Enhanced moderation and reporting
+- Advanced asset management (skins marketplace)
+- Multi-language support expansion
+- Accessibility improvements
+- Integration with chess engines (Stockfish)
+
+### 5.3 Logical Dependency Chain
+
+1. **Foundation:**
+   - Set up monorepo, Turborepo, and workspace structure
+   - Configure environment variables and secrets (infisical)
+   - Initialize Supabase projects and MinIO
+   - Set up Docker, docker-compose, and CI/CD pipelines
+   - Scaffold SolidStart app in `workspaces/webapp` to serve as both frontend and backend (tRPC API) container.
+   - **Create and manage all database schema, migrations, and Prisma client in `workspaces/database`.**
+2. **Core Backend:**
+   - Implement tRPC API, domain routers, and Zod validation within the Solid-Start app
+   - Build WebSocket server and event handling
+   - Integrate authentication (Better Auth, JWT)
+   - **Webapp imports Prisma client from `@unique-chess/database` for all database access.**
+   - Set up database schemas and RLS policies in `workspaces/database`
+3. **Frontend MVP:**
+   - Implement 3D chessboard (Three.js)
+   - Integrate tRPC and WebSocket client
+   - Build authentication and profile flows
+   - Add basic chat and game logic
+4. **Payments & Ads:**
+   - Integrate Stripe payments and webhooks
+   - Add Google Ads logic for non-members
+5. **Media & Asset Management:**
+   - Integrate MinIO for uploads/downloads
+   - Implement asset versioning and lifecycle
+6. **SEO & i18n:**
+   - Add SSR meta tags, sitemap, robots.txt
+   - Implement solid-i18n for multilingual support
+7. **Testing & Monitoring:**
+   - Add unit/integration/E2E tests (Vitest, Playwright)
+   - Set up logging, monitoring, and error reporting
+8. **Enhancements:**
+   - Add advanced features, polish UX, expand platform
+
+---
+
+## 6. Risks and Mitigations
+
+### 6.1 Technical Challenges
+- **3D Rendering Performance:**
+  - Mitigation: Optimize Three.js usage, lazy load assets, profile performance
+- **Real-time Sync:**
+  - Mitigation: Use scalable WebSocket server, Redis Pub/Sub for multi-instance
+- **Authentication Security:**
+  - Mitigation: Use JWT, strong password hashing, regular audits
+- **Payments & Webhooks:**
+  - Mitigation: Validate all Stripe webhooks, handle edge cases, test thoroughly
+- **Database Consistency:**
+  - Mitigation: Use RLS, enforce constraints, regular backups
+- **Media Storage:**
+  - Mitigation: Use MinIO versioning, lifecycle, and presigned URLs
+
+### 6.2 MVP Scoping
+- **Overengineering:**
+  - Mitigation: Focus on core flows, defer enhancements
+- **Feature Creep:**
+  - Mitigation: Strict roadmap, regular reviews
+
+### 6.3 Resource Constraints
+- **Limited Team/Budget:**
+  - Mitigation: Prioritize MVP, leverage open-source, automate CI/CD
+- **Scaling Costs:**
+  - Mitigation: Use free tiers, monitor usage, optimize infrastructure
+
+---
+
+## 7. Appendix
+
+### 7.1 Research Findings
+- Modern chess platforms lack immersive 3D and real-time social features
+- SolidStart, Three.js, and tRPC provide a robust, type-safe, and performant stack
+- MinIO offers scalable, S3-compatible storage for media assets
+- Supabase enables rapid development with managed Postgres and Auth
+- Stripe and Google Ads are industry standards for payments and monetization
+
+### 7.2 Technical Specifications
+- **Frontend:** TypeScript, SolidStart, Tailwind CSS v4, DaisyUI, Three.js
+- **Backend:** tRPC, Node.js, Zod, JWT, Winston/Pino, Sentry
+- **Database:** Supabase (PostgreSQL), RLS, JSONB for complex data
+- **Object Storage:** MinIO, S3 API, presigned URLs, versioning
+- **Payments:** Stripe API, webhooks, membership logic
+- **Ads:** Google Ads API, privacy compliance
+- **CI/CD:** GitHub Actions, Docker, Netlify/Fly.io
+- **Testing:** Vitest, Playwright
+
+### 7.3 Additional Notes
+- All code is written in TypeScript with strict type checking
+- Monorepo structure separates apps and packages for maintainability
+- All environment variables and secrets managed via infisical
+- Documentation is maintained in README.md and Storybook for UI
+- Accessibility and internationalization are first-class concerns
+- The platform is designed for extensibility and future growth
+
+---

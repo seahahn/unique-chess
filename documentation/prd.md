@@ -131,3 +131,9 @@ The 3D Chess Web Platform is a modern, browser-based chess service that supports
 ---
 
 > All decisions are made with scalability, maintainability, developer productivity, and modern web standards in mind.
+
+# Architectural Overview
+
+The project will use a unified fullstack architecture based on the Solid-Start framework. Both the frontend and backend (tRPC API) will be implemented together in the `workspaces/webapp` directory. All API logic, routers, and server-side code will be integrated within the Solid-Start app structure. There will be no separate backend app or directory. All references to a separate backend-api app are obsolete and should be disregarded.
+
+The database schema, Prisma client, and all database migrations will be located in `workspaces/database`. The webapp will import the Prisma client from this workspace using imports like: `import { prisma } from "@unique-chess/database"`. All database access and migrations are managed in this workspace, not in the webapp.
