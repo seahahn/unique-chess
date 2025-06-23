@@ -1,0 +1,63 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Cursor AI Backend Rules: 3D Chess Web Platform
+
+These rules define the standards and best practices for all backend development on the 3D Chess Web Platform.
+
+---
+
+## API Framework
+
+- Build the backend API using **tRPC** for end-to-end type safety and streamlined communication between client and server.
+- Organize tRPC routers by domain (e.g., game, user, chat).
+- Use input validation with **Zod** or similar libraries within tRPC procedures for robust data integrity.
+
+## Real-time Server
+
+- Implement a dedicated **WebSocket server** as a separate application within the monorepo for all real-time communication.
+- Use scalable event handling (e.g., **Redis Pub/Sub**) for multi-instance deployments.
+
+## Authentication
+
+- Use **JWT-based authentication** for both client-server and inter-server communication.
+- Validate JWTs on every request and handle token expiration gracefully.
+
+## Security
+
+- Implement password hashing, CSRF/XSS protection, and rate limiting.
+- Use **bcrypt** or **argon2** for password hashing.
+- Use **helmet** for HTTP security headers.
+- Use **express-rate-limit** or similar middleware for rate limiting.
+
+## Scalability
+
+- Design authentication and critical services so they can be separated into microservices as traffic grows.
+- Use environment variables for service endpoints.
+- Decouple business logic from transport layers.
+
+## Logging
+
+- Implement robust monitoring and logging for authentication events and system health.
+- Use structured logging (e.g., **Winston**, **Pino**).
+- Integrate with monitoring tools (e.g., **Sentry**, **Prometheus**).
+
+## Payment Integration
+
+- Integrate **Stripe** for payment processing.
+- Use webhooks for payment event handling.
+- Validate all incoming webhook requests.
+
+## Advertising Integration
+
+- Integrate **Google Ads** for non-members.
+- Serve ad-related logic server-side.
+- Ensure compliance with privacy policies.
+
+## Media & Asset Management
+
+- Store and manage images, videos, and other unstructured files using **MinIO** object storage with S3 API compatibility[11].
+- Use presigned URLs for uploads/downloads.
+- Enable versioning and set up lifecycle management for storage efficiency.

@@ -1,0 +1,52 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Cursor AI Build Tools & Development Rules: 3D Chess Web Platform
+
+These rules define the standards and best practices for build tooling, monorepo management, code style, secrets, and documentation for the 3D Chess Web Platform.
+
+---
+
+## Monorepo Management
+
+- Use **Turborepo** for managing the monorepo, including all apps (e.g., frontend, backend, websocket server) and shared packages (e.g., UI, utils, types).
+- Organize the repository with clear separation between `/apps` and `/packages` directories.
+- Leverage Turborepo’s **incremental build caching** and pipeline features to speed up local and CI builds.
+- Use `turbo.json` to define build, lint, test, and deploy pipelines for each workspace.
+- Document the workspace structure and dependency graph in the root `README.md` for easy onboarding and maintenance.
+- Regularly prune unused packages and keep dependencies up to date.
+
+## Code Style & Convention
+
+- Enforce code style and convention using **biome** (linter, formatter, and code quality tool).
+- Configure biome in the project root and extend rules as needed for project-specific requirements.
+- Set up **pre-commit hooks** (e.g., with Husky or Lefthook) to automatically run biome checks before each commit.
+- Integrate linting and formatting checks into CI pipelines to ensure codebase consistency and prevent style regressions.
+- Resolve all linting and formatting errors before merging any code.
+
+## Environment Variables & Secrets
+
+- Manage all environment variables and secrets using **infisical** for secure, centralized, and auditable secret management.
+- Do not hardcode secrets or sensitive values in source code or configuration files.
+- Use environment-specific `.env` files (e.g., `.env.development`, `.env.production`) and inject variables at build/deploy time.
+- Rotate secrets regularly and restrict access based on the principle of least privilege.
+- Document required environment variables and their usage in a dedicated section of the `README.md` or a separate `ENVIRONMENT.md`.
+
+## Documentation
+
+- Maintain clear and up-to-date documentation for onboarding, API usage, and component libraries.
+- Use `README.md` files in the root and each major workspace/package to explain setup, usage, and contribution guidelines.
+- Use **Storybook** for documenting and visually testing UI components, ensuring all components have usage examples and accessibility notes.
+- Auto-generate API documentation (e.g., with tools like TypeDoc for TypeScript or Swagger/OpenAPI for REST endpoints) and keep it in sync with the codebase.
+- Encourage contributors to update documentation as part of the development workflow and review docs alongside code changes.
+
+---
+
+## Best Practices
+
+- Keep build and development rules concise, actionable, and easy to follow.
+- Regularly review and update build tools, scripts, and documentation to align with evolving project needs and best practices.
+- Automate repetitive tasks (linting, formatting, testing, building) to reduce manual errors and improve developer productivity.
+- Foster a documentation-first culture to ensure knowledge is shared and onboarding is streamlined.

@@ -1,0 +1,54 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Cursor AI Testing Rules: 3D Chess Web Platform
+
+These rules define the standards and best practices for all testing activities on the 3D Chess Web Platform, with concrete examples for each technology stack.
+
+---
+
+## Testing Strategy
+
+- Include comprehensive testing at all levels:
+  - **Unit tests** for individual functions, components, and modules.
+  - **Integration tests** for interactions between multiple modules or systems.
+  - **End-to-end (E2E) tests** for user flows and application behavior across the stack.
+- Write tests alongside new features and bug fixes to ensure code reliability and prevent regressions.
+
+---
+
+## Unit Testing with Vitest
+
+- Use **Vitest** as the primary unit testing framework.
+- Organize test files next to the code under test, using the `.test.ts` or `.spec.ts` naming convention.
+- Mock dependencies using Vitest’s mocking utilities for isolated testing.
+- Aim for high code coverage and use Vitest’s coverage reports to identify gaps.
+
+---
+
+## End-to-End Testing with Playwright
+
+- Use **Playwright** for all E2E tests.
+- Place E2E tests in a dedicated directory, such as `/e2e/`.
+- Simulate realistic user flows, including authentication, gameplay, and error handling.
+- Use Playwright’s fixtures for setup/teardown and to manage test users or test data.
+
+---
+
+## Integration Testing
+
+- Write integration tests to verify interactions between components, modules, or services (e.g., state management with Solid Store and API calls).
+- Use Vitest or Playwright depending on the integration scope (backend logic vs. full-stack flow).
+
+---
+
+## Best Practices
+
+- Keep tests concise, focused, and maintainable.
+- Use clear naming conventions for test files and cases.
+- Mock external dependencies (APIs, storage, etc.) to avoid flaky tests.
+- Run tests automatically in CI pipelines and require passing tests for all merges.
+- Regularly review and refactor tests to ensure they remain relevant as the codebase evolves.
+- Use code coverage tools to monitor and improve test completeness.

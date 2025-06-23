@@ -1,0 +1,44 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Cursor AI CSS & Styling Rules: 3D Chess Web Platform
+
+These rules define the standards and best practices for all CSS and styling work on the 3D Chess Web Platform.
+
+---
+
+## CSS Framework
+
+- Use **Tailwind CSS v4** for all styling[1].
+- Apply utility classes for design consistency and maintainability.
+- Maintain a design tokens file for theme management and standardized color, spacing, and typography values.
+
+## Component Library
+
+- Use **DaisyUI** components, styled with Tailwind CSS[1].
+- Extend DaisyUI with custom themes as needed to match project branding.
+- Ensure all components are accessible (A11y compliant) and fully responsive.
+
+## Responsiveness
+
+- All UI components must be fully responsive across devices.
+- Use Tailwind’s responsive utilities (e.g., `sm:`, `md:`, `lg:`, `xl:`) to adapt layouts and components.
+- Test layouts on various devices and screen sizes to ensure usability.
+
+## Customizable Skins
+
+- Support user-customizable board and piece skins, visible to other users.
+- Store skin metadata in the database for persistence and sharing.
+- Fetch skin assets from **MinIO** object storage for efficient and secure delivery.
+
+---
+
+## Best Practices
+
+- Keep rules concise and actionable.
+- Split large concepts into multiple, composable rules if needed.
+- Provide concrete examples or referenced files when helpful.
+- Avoid vague guidance; write rules as you would for clear internal documentation.
+- Regularly review and update rules to reflect evolving project standards.

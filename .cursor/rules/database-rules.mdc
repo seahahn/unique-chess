@@ -1,0 +1,51 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Cursor AI Database Rules: 3D Chess Web Platform
+
+These rules define the standards and best practices for all database work on the 3D Chess Web Platform.
+
+---
+
+## Database Platform
+
+- Use **Supabase** (PostgreSQL-based BaaS) as the primary database platform.
+- Leverage Supabase’s full Postgres capabilities, including extensions, for advanced features and scalability.
+- Use Supabase’s Realtime and Auth features for seamless integration with application logic.
+
+## Database Structure
+
+- Use **two separate Supabase projects/PostgreSQL databases**:
+  - One for main application data.
+  - One for user authentication data.
+- Keep schema definitions version-controlled (e.g., with migration files or schema.sql).
+- Document all table relationships, constraints, and indexes for maintainability.
+- Normalize data to minimize redundancy and improve integrity; use appropriate data types and enforce primary/foreign key constraints.
+- Apply Row-Level Security (RLS) policies to all tables to ensure fine-grained access control.
+- Use separate schemas within databases if further logical separation is required.
+
+## Data Serialization
+
+- For complex or nested data, use PostgreSQL’s **JSONB** type for structured storage and efficient querying.
+- If JSONB is not feasible, serialize data to JSON strings with `JSON.stringify()` before saving, and parse with `JSON.parse()` upon retrieval.
+- Index JSONB columns as needed for performance on frequent queries.
+- Avoid storing large binary objects (images/videos) directly in the database.
+
+## Media & Asset References
+
+- **Do not store images or videos directly in PostgreSQL**.
+- Store only references (URLs, keys) to media assets in the database.
+- Manage all media files via **MinIO** object storage for scalability and efficiency.
+- Ensure database backups and restores are coordinated with object storage management, as Supabase backups do not include storage objects.
+
+---
+
+## Best Practices
+
+- Version-control all schema changes and migrations.
+- Regularly review and update rules to reflect evolving project standards.
+- Monitor query performance and add indexes to frequently queried columns.
+- Encrypt sensitive data using PostgreSQL functions or extensions (e.g., pgsodium) when required.
+- Use Supabase’s automated backups and periodically test restore procedures.

@@ -1,0 +1,125 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Cursor AI Language-Specific Rules & Coding Style Guide: 3D Chess Web Platform
+
+This comprehensive guide outlines the language-specific standards, coding style, and best practices for all code written for the 3D Chess Web Platform, with a focus on TypeScript, SolidJS/SolidStart, and modern frontend engineering. These rules are informed by official documentation, industry best practices, and effective patterns from Cursor AI projects.
+
+---
+
+## TypeScript
+
+- **All JavaScript-based code must be written in TypeScript** to ensure type safety, maintainability, and developer productivity.
+- **Enable strict type checking** in `tsconfig.json` by setting `strict: true` and enabling related flags (`noImplicitAny`, `strictNullChecks`, etc.).
+- **Define interfaces and types** for all data structures, API payloads, and component props. Avoid using `any` and prefer explicit, descriptive types.
+- **Prefer interfaces over types** for object shapes.
+- **Avoid enums**; use maps or string literals instead for flexibility.
+- **Use enums or union types** for fixed sets of values (e.g., chess piece types, status codes).
+- **Leverage utility types** (e.g., `Partial`, `Pick`, `Record`) to compose and transform types safely.
+- **Document complex types** with comments or JSDoc for better onboarding and code reviews.
+- **Integrate TypeScript checks into CI pipelines** to prevent type errors from reaching production.
+- **Use explicit TypeScript interfaces for Solid component props.**
+- **Best Practices:**
+  - Use type guards and assertion functions for runtime type safety when handling external data (e.g., API responses).
+  - Avoid type assertion (`as`) unless absolutely necessary and justified by comments.
+  - Keep types and interfaces in dedicated files or folders (e.g., `/types`, `/interfaces`) forty and reuse.
+
+---
+
+## SolidJS / SolidStart
+
+-  SolidJS and SolidStart best practices** for reactivity, component architecture, and performance, as outlined in the [SolidJS Docs](https://www.solidjs.com/docs) and [SolidStart Docs](https://start.solidjs.com/docs).
+- **Use signals (`createSignal`)** for managing reactive state within components. Prefer signals over stores or context for local, simple state.
+- **Scope state by feature or domain** using Solid Store for shared or complex state.
+- **Avoid unnecessary re-renders** by:
+  - Keeping computations pure and side-effect free.
+  - Using `createMemo` for derived state and expensive computations.
+  - Passing only necessary props to child components and using destructuring for performance.
+- **Leverage lazy loading** for routes and heavy components using SolidStart’s `lazy` and `Suspense` for code splitting and improved initial load times.
+- **Use context providers** for global state or cross-cutting concerns (e.g., authentication, theme, i18n), but avoid overusing context to prevent performance bottlenecks.
+- **Write components as pure functions** and avoid side effects in the render phase.
+- **Structure components for reusability** and maintain a clear separation between UI and logic (e.g., hooks for logic, components for view).
+- **Test components and hooks** using Solid’s testing utilities and ensure all reactive logic is covered by unit or integration tests.
+- **Use `createResource` for data fetching** with automatic loading/error state management.
+- **Clean up effects and subscriptions** using Solid’s `onCleanup` to prevent memory leaks.
+- **Document component props and expected behaviors** in code comments or Storybook.
+- **Prefer composition over inheritance** and use custom hooks for shared logic.
+
+---
+
+## Coding Style and Structure
+
+- Write concise, technical TypeScript code with accurate examples.
+- Use functional and declarative programming patterns; avoid classes where SolidJS's reactivity model is more idiomatic.
+- Prefer iteration and modularization over code duplication.
+- Use descriptive variable names with auxiliary verbs (e.g., `isLoading`, `hasError`).
+- Structure files in the following order:
+  1. Exported component
+  2. Subcomponents
+  3. Helpers
+  4. Static content
+  5. Types
+
+---
+
+## Naming Conventions
+
+- Use lowercase with dashes for directories (e.g., `components/auth-wizard`).
+- Favor named exports for components.
+
+---
+
+## Syntax and Formatting
+
+- Use the `function` keyword for pure functions.
+- Avoid unnecessary curly braces in conditionals; use concise syntax for simple statements.
+- Use declarative JSX/TSX.
+
+---
+
+## Error Handling and Validation
+
+- Prioritize error handling: handle errors and edge cases early in the execution flow.
+- Use early returns and guard clauses for cleaner, more robust code.
+- Implement proper error logging and provide user-friendly messages.
+- Use Zod for all form and input validation.
+- Model expected errors as return values in SolidStart's server functions.
+- Utilize SolidStart's Error Boundaries for gracefully handling unexpected errors within the UI.
+
+---
+
+## UI and Styling
+
+- Utilize DaisyUI components, ensuring all styling is applied using Tailwind CSS v4.
+- Implement responsive design with Tailwind CSS, ensuring optimal viewing and interaction across all device sizes.
+
+---
+
+## Performance Optimization
+
+- Leverage SolidJS's fine-grained reactivity to minimize unnecessary re-renders.
+- Optimize signal usage and employ memoization (e.g., `createMemo`) for derived state.
+- Utilize SolidStart's built-in streaming SSR capabilities for faster initial page loads.
+- Wrap components that might suspend (e.g., during async data loading) in `Suspense` with a meaningful fallback.
+- Implement dynamic loading (lazy loading) for non-critical components to reduce initial bundle size.
+- Optimize images: use modern formats like WebP, include explicit width and height attributes, and implement native lazy loading.
+- Ensure application design prioritizes Core Web Vitals (LCP, CLS, FID).
+
+---
+
+## Key Conventions
+
+- Implement robust URL search parameter state management.
+- Follow SolidStart documentation and best practices for data fetching, rendering strategies (SSR, CSR, SSG), and routing.
+- Understand and correctly apply SolidStart's server functions for server-side logic and data mutations.
+
+---
+
+## General Best Practices
+
+- **Keep language and framework rules concise, actionable, and regularly reviewed.**
+- **Document deviations from best practices** and justify them in code comments or architectural decision records.
+- **Automate enforcement** of language and framework rules using linters, formatters, and CI checks.
+- **Encourage regular knowledge sharing** and code reviews to ensure adherence and continuous improvement.

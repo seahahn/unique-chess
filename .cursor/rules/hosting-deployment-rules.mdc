@@ -1,0 +1,51 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Cursor AI Hosting & Deployment Rules: 3D Chess Web Platform
+
+These rules define the standards and best practices for hosting, deployment, and local orchestration of the 3D Chess Web Platform.
+
+---
+
+## Containerization
+
+- Deploy both the SolidStart frontend server and the WebSocket server as independent Docker containers, each with its own `Dockerfile`.
+- Use **multi-stage builds** in Dockerfiles to minimize final image size and separate build-time dependencies from runtime.
+- Regularly **scan container images for vulnerabilities** using tools such as Trivy, Snyk, or Docker Scout.
+- Pin base image versions and update dependencies to reduce security risks.
+- Configure containers to run as non-root users and set appropriate resource limits for production deployments.
+
+## CI/CD
+
+- Use **GitHub Actions** as the continuous integration and deployment (CI/CD) platform.
+- Set up **separate workflows** for build, test, and deployment stages to improve reliability and traceability.
+- Store sensitive data (API keys, secrets, tokens) in GitHub Actions **secrets** and reference them securely in workflows.
+- Enable status checks and require passing builds/tests before allowing merges to main branches.
+- Automate deployment triggers on successful builds, and notify stakeholders or channels (e.g., Slack, Discord) upon deployment completion or failure.
+
+## Deployment Platforms
+
+- Deploy production and staging environments to **Netlify** or **Fly.io**, prioritizing free tiers for cost efficiency during early stages.
+- Configure environment variables and secrets through the deployment platform’s management interfaces.
+- Monitor deployment logs and application health through platform dashboards.
+- Implement **rollback strategies** (e.g., previous deployment reverts or blue-green deployments) to minimize downtime in case of failures.
+- Set up custom domains and HTTPS certificates via platform-provided tools.
+
+## Local Orchestration
+
+- Use **docker-compose** to orchestrate multiple containers for local development, including app servers, both Supabase PostgreSQL databases, MinIO object storage, and any additional services (e.g., Redis).
+- Version-control your `docker-compose.yml` and related configuration files to ensure consistency across environments.
+- Document service dependencies, port mappings, and environment variables in a `README.md` or `CONTRIBUTING.md` for onboarding and troubleshooting.
+- Use named volumes for persistent data and networks for secure inter-service communication during local development.
+- Regularly update and test local orchestration scripts to reflect changes in the overall architecture.
+
+---
+
+## Best Practices
+
+- Keep deployment and orchestration rules concise and actionable.
+- Regularly review and update Dockerfiles, CI/CD workflows, and orchestration scripts to align with evolving project needs and security best practices.
+- Automate as much of the deployment and rollback process as possible to reduce manual errors and downtime.
+- Monitor resource usage and optimize container and infrastructure configurations for cost and performance.

@@ -1,0 +1,69 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Cursor AI Frontend Rules: 3D Chess Web Platform
+
+These rules define the standards and best practices for all client-side development on the 3D Chess Web Platform.
+
+---
+
+## Framework & Architecture
+
+- All frontend code **must** use SolidStart for application structure and routing.
+- Structure components for maximum reusability and modularity.
+- Leverage SolidStart’s SSR (Server-Side Rendering) and CSR (Client-Side Rendering) features for optimal performance and SEO.
+- Organize code into feature-based directories for clarity and scalability.
+
+## 3D Rendering
+
+- Use **Three.js** exclusively for all 3D chessboard and chess piece rendering.
+- Place all 3D assets and rendering logic in dedicated modules (e.g., `/features/chess3d/`).
+- Optimize rendering for performance (minimize re-renders, use efficient geometries/materials).
+- Ensure accessibility for 3D elements (ARIA roles, keyboard navigation where possible).
+
+## API Communication
+
+- Use **tRPC** exclusively for type-safe, end-to-end API communication with the backend.
+- Co-locate tRPC hooks with their respective feature components.
+- Always leverage TypeScript types from tRPC for safety and autocompletion.
+- Document API usage patterns in code comments or a dedicated `API_USAGE.md`.
+
+## Real-time Communication
+
+- All real-time features (game state sync, chat) must interact with the dedicated WebSocket server.
+- Abstract WebSocket logic into a custom hook or store (e.g., `useGameSocket.ts`) for maintainability and testability.
+- Ensure reconnection and error-handling logic is robust.
+
+## Authentication
+
+- Integrate **Better Auth** for client-side authentication.
+- Use JWTs for session management.
+- Store JWTs in HTTP-only cookies for security.
+- Ensure login and logout flows are robust and handle errors gracefully.
+
+## Internationalization (i18n)
+
+- Use **solid-i18n** for multilingual support.
+- Organize translations in locale files (e.g., `/locales/en.json`, `/locales/ko.json`).
+- Use context providers to enable language switching at runtime.
+
+## SEO
+
+- Implement SSR meta tags for all pages.
+- Dynamically generate meta tags per route.
+- Validate SEO using tools like Lighthouse.
+- Ensure all client-side rendering supports SEO best practices.
+
+## Accessibility (A11y)
+
+- All UI components must comply with A11y standards.
+- Use semantic HTML, proper ARIA attributes, and ensure keyboard navigation support.
+- Regularly audit accessibility using automated tools and manual testing.
+
+## Media & Asset Consumption
+
+- Fetch and display images, videos, and other assets from **MinIO** object storage[1].
+- Use signed URLs for secure asset access.
+- Lazy-load media assets for performance optimization.
