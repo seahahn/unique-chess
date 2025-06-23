@@ -2,9 +2,9 @@
   "name": "@unique-chess/webapp",
   "type": "module",
   "scripts": {
-    "dev": "NODE_OPTIONS='--inspect=0.0.0.0:9229' vinxi dev --host --devtools",
-    "build": "vinxi build",
-    "start": "vinxi start",
+    "dev": "infisical run -- NODE_OPTIONS='--inspect=0.0.0.0:9229' vinxi dev --host --devtools",
+    "build": "infisical run -- vinxi build",
+    "start": "infisical run -- vinxi start",
     "cucumber": "cross-env NODE_OPTIONS='--import tsx' cucumber-js",
     "cucumber-debug": "cross-env NODE_OPTIONS='--import tsx' PWDEBUG=1 DEBUG=pw:api cucumber-js",
     "clean": "rm -rf .turbo node_modules"

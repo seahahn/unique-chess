@@ -22,7 +22,7 @@
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -87,7 +87,7 @@
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -138,7 +138,7 @@
               4
             ],
             "details": "Update the package.json scripts or Docker entrypoints for 'webapp' and 'websocket-server'. Use the `infisical run -- <your_command>` pattern (e.g., `infisical run -- pnpm dev`) or integrate the Infisical SDK directly into the application code. Configure authentication (e.g., using service tokens or personal access tokens).",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Run the 'webapp' and 'websocket-server' services locally using the modified startup commands and verify that environment variables loaded from Infisical are accessible within the running application processes."
           }
         ]
@@ -1183,7 +1183,7 @@
     ],
     "metadata": {
       "created": "2025-06-23T20:44:46.153Z",
-      "updated": "2025-06-23T21:07:12.620Z",
+      "updated": "2025-06-23T21:12:41.460Z",
       "description": "Tasks for master context"
     }
   }
