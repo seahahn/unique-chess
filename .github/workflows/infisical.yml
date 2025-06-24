@@ -1,0 +1,42 @@
+name: Infisical Secrets Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to sync secrets to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+jobs:
+  sync_secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Infisical CLI
+        uses: infisical/setup-cli@v1
+        with:
+          version: 'latest'
+
+      - name: Authenticate with Infisical
+        run: |
+          infisical login --token=${{ secrets.INFISICAL_TOKEN }}
+
+      - name: Sync secrets
+        run: |
+          echo "Syncing secrets for ${{ github.event.inputs.environment }} environment"
+          infisical secrets export --env=${{ github.event.inputs.environment }} --format=dotenv > .env.${{ github.event.inputs.environment }}
+          
+      - name: Upload .env file as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: env-file-${{ github.event.inputs.environment }}
+          path: .env.${{ github.event.inputs.environment }}
+          retention-days: 1

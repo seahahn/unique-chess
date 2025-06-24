@@ -1,0 +1,33 @@
+webapp:
+  - workspaces/webapp/**/*
+
+websocket:
+  - workspaces/websocket/**/*
+
+database:
+  - workspaces/database/**/*
+
+docker:
+  - docker-compose.yml
+  - docker-compose.prod.yml
+  - workspaces/*/Dockerfile*
+
+github-actions:
+  - .github/workflows/**/*
+
+documentation:
+  - '**/*.md'
+  - documentation/**/*
+
+dependencies:
+  - package.json
+  - pnpm-lock.yaml
+  - '**/package.json'
+
+tests:
+  - '**/*.test.ts'
+  - '**/*.test.tsx'
+  - '**/*.spec.ts'
+  - '**/*.spec.tsx'
+  - '**/tests/**/*'
+  - '**/e2e/**/*'

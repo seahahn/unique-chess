@@ -1,0 +1,19 @@
+# Default owners for everything in the repo
+* @your-username
+
+# Webapp specific files
+/workspaces/webapp/ @your-username
+
+# WebSocket server specific files
+/workspaces/websocket/ @your-username
+
+# Database specific files
+/workspaces/database/ @your-username
+
+# Docker files
+docker-compose.yml @your-username
+docker-compose.prod.yml @your-username
+**/Dockerfile* @your-username
+
+# GitHub Actions workflows
+/.github/workflows/ @your-username

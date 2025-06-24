@@ -1,0 +1,61 @@
+name: Issue Management
+
+on:
+  issues:
+    types: [opened, labeled, unlabeled]
+  pull_request:
+    types: [opened, labeled, unlabeled]
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initial triage
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue = context.payload.issue || context.payload.pull_request;
+            
+            if (!issue) return;
+            
+            // Add default labels based on type
+            if (context.payload.action === 'opened') {
+              const isIssue = !!context.payload.issue;
+              const isPR = !!context.payload.pull_request;
+              
+              const labelsToAdd = [];
+              
+              if (isIssue) {
+                labelsToAdd.push('needs-triage');
+              }
+              
+              if (isPR) {
+                labelsToAdd.push('needs-review');
+              }
+              
+              if (labelsToAdd.length > 0) {
+                await github.rest.issues.addLabels({
+                  owner,
+                  repo,
+                  issue_number: issue.number,
+                  labels: labelsToAdd
+                });
+              }
+            }
+            
+            // Auto-assign to project
+            if (context.payload.action === 'opened') {
+              // Note: This requires a project setup and the PROJECT_ID secret
+              // Uncomment when project is set up
+              /*
+              const projectId = process.env.PROJECT_ID;
+              if (projectId) {
+                await github.rest.projects.createCard({
+                  project_id: projectId,
+                  content_id: issue.id,
+                  content_type: 'Issue'
+                });
+              }
+              */
+            }

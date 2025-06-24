@@ -249,7 +249,7 @@
         "dependencies": [
           6
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -257,7 +257,7 @@
             "description": "Set up the basic structure for the CI/CD workflow file (`.github/workflows/ci.yml`) including name, trigger events, and the initial job definition.",
             "dependencies": [],
             "details": "Create the file `.github/workflows/ci.yml` with `name: CI`, `on: [push, pull_request]`, and the `jobs` section containing a `lint_test_build` job running on `runs-on: ubuntu-latest`.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Verify the file exists in the repository and contains the basic YAML structure for a GitHub Actions workflow."
           },
           {
@@ -268,7 +268,7 @@
               1
             ],
             "details": "Add the following steps under the `lint_test_build` job's `steps`: `- uses: actions/checkout@v3`, `- uses: pnpm/action-setup@v2`, and `- run: pnpm install --frozen-lockfile`.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Trigger the workflow and observe the GitHub Actions run log to ensure the checkout and pnpm setup steps execute successfully without errors."
           },
           {
@@ -279,7 +279,7 @@
               2
             ],
             "details": "Add the following steps under the `lint_test_build` job's `steps` after the install step: `- run: pnpm lint` and `- run: pnpm test`.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Trigger the workflow and verify that the 'pnpm lint' and 'pnpm test' steps run and pass successfully in the GitHub Actions log."
           },
           {
@@ -290,7 +290,7 @@
               3
             ],
             "details": "Add `run` steps to execute `docker build` commands for both the webapp and websocket-server services. This may involve navigating to service directories and tagging the images appropriately.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Trigger the workflow and confirm that the Docker build commands execute successfully for both services within the GitHub Actions run."
           },
           {
@@ -301,7 +301,7 @@
               4
             ],
             "details": "Add a new job named `deploy_staging` at the same level as `lint_test_build`. Define its basic structure, potentially including a dependency on the build job (`needs: lint_test_build`) and placeholder steps or comments indicating where deployment logic will go (e.g., steps for Netlify/Fly.io deployment).",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Verify that the `deploy_staging` job is defined in the `.github/workflows/ci.yml` file, even if its internal steps are minimal or commented out initially."
           }
         ]

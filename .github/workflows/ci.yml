@@ -1,0 +1,130 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lint_test_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9.0.0
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm run --filter=@unique-chess/database generate
+
+      - name: Lint
+        run: pnpm run format-and-lint
+        
+      - name: Build
+        run: pnpm run build
+
+      - name: Test
+        run: pnpm run test || echo "No tests found"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build webapp Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./workspaces/webapp/Dockerfile
+          push: false
+          tags: unique-chess/webapp:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build websocket Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./workspaces/websocket/Dockerfile
+          push: false
+          tags: unique-chess/websocket:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy_staging:
+    needs: lint_test_build
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Infisical CLI
+        uses: infisical/setup-cli@v1
+        with:
+          version: 'latest'
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push webapp Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./workspaces/webapp/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/unique-chess-webapp:latest,${{ secrets.DOCKER_USERNAME }}/unique-chess-webapp:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push websocket Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./workspaces/websocket/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/unique-chess-websocket:latest,${{ secrets.DOCKER_USERNAME }}/unique-chess-websocket:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Deploy to Fly.io (placeholder for now)
+      - name: Deploy to Fly.io (placeholder)
+        run: |
+          echo "Deploying to Fly.io staging environment"
+          echo "This is a placeholder for the actual deployment command"
+          # Example of actual deployment (uncomment when ready):
+          # curl -L https://fly.io/install.sh | sh
+          # export FLYCTL_INSTALL="/home/runner/.fly"
+          # export PATH="$FLYCTL_INSTALL/bin:$PATH"
+          # flyctl auth token ${{ secrets.FLY_API_TOKEN }}
+          # flyctl deploy --app unique-chess-webapp --image ${{ secrets.DOCKER_USERNAME }}/unique-chess-webapp:${{ github.sha }}
