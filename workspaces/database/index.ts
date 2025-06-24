@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client"
-import { NODE_ENV } from "./environment"
+import { NODE_ENV } from "./environment.js"
 
 export * from "@prisma/client"
 
