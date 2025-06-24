@@ -1,6 +1,29 @@
 version: '3.8'
 
 services:
+  # SolidStart Web Application
+  webapp:
+    build:
+      context: .
+      dockerfile: workspaces/webapp/Dockerfile.dev
+    container_name: unique-chess-webapp
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/application
+      - node_modules:/application/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: pnpm run --filter=@unique-chess/webapp dev
+    networks:
+      - unique-chess-network
+
   # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
@@ -78,6 +101,29 @@ services:
     networks:
       - unique-chess-network
 
+  # WebSocket Server
+  websocket:
+    build:
+      context: .
+      dockerfile: workspaces/websocket/Dockerfile.dev
+    container_name: unique-chess-websocket
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/application
+      - node_modules:/application/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: pnpm run --filter=@unique-chess/websocket dev
+    networks:
+      - unique-chess-network
+
 volumes:
   postgres_data:
     driver: local
@@ -86,6 +132,8 @@ volumes:
   minio_data:
     driver: local
   redis_data:
+    driver: local
+  node_modules:
     driver: local
 
 networks:

@@ -10,7 +10,7 @@ RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
 FROM base as builder
 WORKDIR /application
 COPY . .
-RUN pnpm turbo prune --scope=@unique-chess/webapp --docker
+RUN pnpm turbo prune --scope=@unique-chess/websocket --docker
 
 # DEPENDENCIES
 FROM base AS dependencies
@@ -29,16 +29,16 @@ ENV NODE_OPTIONS --max-old-space-size=4096
 COPY --from=dependencies /application .
 COPY --from=builder /application/out/full .
 RUN pnpm run --filter=@unique-chess/database generate
-RUN pnpm run --filter=@unique-chess/webapp build
+RUN pnpm run --filter=@unique-chess/websocket build
 
 # PRODUCTION
 FROM base AS production
 WORKDIR /application
 
-COPY --from=build /application/workspaces/webapp/dist ./dist
-COPY --from=build /application/workspaces/webapp/package.json ./
+COPY --from=build /application/workspaces/websocket/dist ./dist
+COPY --from=build /application/workspaces/websocket/package.json ./
 COPY --from=build /application/node_modules ./node_modules
 
-EXPOSE 3000
+EXPOSE 8080
 
-CMD ["pnpm", "run", "--filter=@unique-chess/webapp", "start"]
+CMD ["node", "dist/index.js"]
