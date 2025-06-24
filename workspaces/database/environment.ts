@@ -50,6 +50,15 @@ export const DATABASE_URL = getEnv("DATABASE_URL", {
   isRequired: false,
 }) || process.env.DATABASE_URL
 
+// For local development, use the PostgreSQL connection string
+export const LOCAL_DATABASE_URL = getEnv("LOCAL_DATABASE_URL", {
+  isSecret: true,
+  isRequired: false,
+}) || process.env.LOCAL_DATABASE_URL
+
+// Use local database URL if available, otherwise use the remote one
+export const ACTIVE_DATABASE_URL = LOCAL_DATABASE_URL || DATABASE_URL
+
 export const WEBAPP_SUPABASE_CONNECTION_STRING = getEnv("WEBAPP_SUPABASE_CONNECTION_STRING", {
   isSecret: true,
   isRequired: false,

@@ -167,7 +167,7 @@
         "dependencies": [
           3
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -175,7 +175,7 @@
             "description": "Incorporate the provided MinIO service definition into the project's docker-compose.yml file.",
             "dependencies": [],
             "details": "Copy the MinIO service block, volumes definition, and ensure correct indentation within the existing docker-compose.yml file. Use the provided snippet as a template.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Verify the docker-compose.yml file contains the new 'minio' service definition and is syntactically valid (e.g., `docker-compose config`)."
           },
           {
@@ -186,7 +186,7 @@
               1
             ],
             "details": "Execute the `docker-compose up -d` command from the project root directory.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Check running containers using `docker ps` and confirm the 'minio' container is listed and healthy."
           },
           {
@@ -197,7 +197,7 @@
               2
             ],
             "details": "Open a web browser and navigate to `http://localhost:9001`. Log in using the default credentials (minioadmin/minioadmin) specified in the docker-compose file.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Successfully load the MinIO console login page and log in."
           },
           {
@@ -208,7 +208,7 @@
               2
             ],
             "details": "In Infisical, add secrets for `MINIO_ENDPOINT` (e.g., `http://localhost:9000`), `MINIO_ACCESS_KEY` (minioadmin), and `MINIO_SECRET_KEY` (minioadmin) using the values from the docker-compose file.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Verify the secrets are added correctly in the Infisical dashboard for the appropriate environment."
           },
           {
@@ -220,7 +220,7 @@
               4
             ],
             "details": "Use the MinIO web console (accessible via http://localhost:9001) or the `mc` client tool with the credentials stored in Infisical to create a new bucket named \"chess-assets\".",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Verify the \"chess-assets\" bucket appears in the list of buckets in the MinIO console or via the `mc ls` command."
           }
         ]

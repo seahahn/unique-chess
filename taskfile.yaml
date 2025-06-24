@@ -19,6 +19,26 @@ tasks:
     - task: clean
     - pnpm i
     - task: database:generate-prisma
+
+  # Local development setup with Docker
+  setup-local:
+    desc: "Set up local development environment with Docker services"
+    cmds:
+      - ./scripts/setup-local-dev.sh
+
+  # Start local development services
+  dev-local:
+    desc: "Start local development with Docker services"
+    dotenv: [".env"]
+    cmds:
+      - docker-compose up -d
+      - infisical run --env=dev -- pnpm turbo dev --parallel
+
+  # Stop local development services
+  stop-local:
+    desc: "Stop local Docker services"
+    cmds:
+      - docker-compose down
   # build the prisma client. eventually we will get rid of this
   generate-prisma:
     - infisical run -- docker compose run --rm -it webapp pnpm run setup:db
